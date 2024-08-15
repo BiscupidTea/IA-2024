@@ -24,8 +24,6 @@ public class Agent : MonoBehaviour
     [SerializeField] private float lostDistance;
     [SerializeField] private float chaseDistance;
 
-
-
     private void Start()
     {
         fsm = new FSM(Enum.GetValues(typeof(Behaviours)).Length, Enum.GetValues(typeof(Flags)).Length);
