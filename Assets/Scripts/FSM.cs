@@ -121,9 +121,9 @@ public class FSM<EnumState, EnumFlag>
 
             multithreadbleBehaviour.Start();
 
-            if (behavioursActions.MainThreadBehaviour.ContainsKey(executionOrder))
+            if (behavioursActions.MainThreadBehaviour != null)
             {
-                if (behavioursActions.MainThreadBehaviour != null)
+                if (behavioursActions.MainThreadBehaviour.ContainsKey(executionOrder))
                 {
                     foreach (Action behaviour in behavioursActions.MainThreadBehaviour[executionOrder])
                     {
