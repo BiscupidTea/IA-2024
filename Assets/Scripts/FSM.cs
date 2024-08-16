@@ -86,7 +86,7 @@ public class FSM<EnumState, EnumFlag>
         }
     }
 
-    public void Tick(params object[] parameters)
+    public void Tick()
     {
         if (behaviours.ContainsKey(currentState))
         {

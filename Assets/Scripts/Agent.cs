@@ -46,7 +46,7 @@ public class Agent : MonoBehaviour
 
     private void Update()
     {
-        fsm.Tick(transform);
+        fsm.Tick();
     }
 
     private void OnDrawGizmos()
