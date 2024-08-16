@@ -12,8 +12,7 @@ public enum Flags
 
 public class Agent : MonoBehaviour
 {
-    private FSM fsm;
-
+    private FSM<Behaviours, Flags> fsm;
     [SerializeField] private Transform target;
 
     [SerializeField] private Transform patrolPoint1;
@@ -26,23 +25,23 @@ public class Agent : MonoBehaviour
 
     private void Start()
     {
-        fsm = new FSM(Enum.GetValues(typeof(Behaviours)).Length, Enum.GetValues(typeof(Flags)).Length);
+        fsm = new FSM<Behaviours, Flags>();
 
         //Add states and transitions
-        fsm.AddBehaviour<ChaseState>((int)Behaviours.Chase,
+        fsm.AddBehaviour<ChaseState>(Behaviours.Chase,
             onTickParameters: () => { return new object[] { transform, target, speed, explodeDistance, lostDistance }; });
-        
-        fsm.SetTransition((int)Behaviours.Chase, (int)Flags.OnTargetReach, (int)Behaviours.Explode);
-        fsm.SetTransition((int)Behaviours.Chase, (int)Flags.OnTargetLost, (int)Behaviours.Patrol);
 
-        fsm.AddBehaviour<PatrolState>((int)Behaviours.Patrol,
+        fsm.AddBehaviour<PatrolState>(Behaviours.Patrol,
             onTickParameters: () => { return new object[] { transform, patrolPoint1, patrolPoint2, target, speed, chaseDistance }; });
-        
-        fsm.SetTransition((int)Behaviours.Patrol, (int)Flags.OnTargetNear, (int)Behaviours.Chase);
 
-        fsm.AddBehaviour<ExplodeState>((int)Behaviours.Explode);
-        
-        fsm.ForcedState((int)Behaviours.Patrol);
+        fsm.AddBehaviour<ExplodeState>(Behaviours.Explode);
+
+        fsm.SetTransition(Behaviours.Patrol, Flags.OnTargetNear, Behaviours.Chase, () => { Debug.Log("Te Vi!"); });
+        fsm.SetTransition(Behaviours.Chase, Flags.OnTargetReach, Behaviours.Explode);
+        fsm.SetTransition(Behaviours.Chase, Flags.OnTargetLost, Behaviours.Patrol);
+
+
+        fsm.ForcedState(Behaviours.Patrol);
     }
 
     private void Update()
@@ -54,10 +53,10 @@ public class Agent : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, lostDistance);
-        
+
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, chaseDistance);
-        
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, explodeDistance);
     }
