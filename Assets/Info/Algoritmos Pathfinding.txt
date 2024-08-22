@@ -1,0 +1,9 @@
+Algoritmos de Búsqueda de caminos con nodos en un graph = Pathfinding
+
+-Deep First search = Ramificación de los nodos para buscar el camino con menos iteraciones de 3 a 0.
+
+-Breadth First search = Ramificación de los nodos para buscar el camino con menos iteraciones de 0 a 3.
+
+-Dijkstra = calcular la menor distancia a recorrer desde el nodo actual hasta al de inicio
+
+-A* = Lo mismo que Dijkstra solo que evalua costo de transitabilidad
