@@ -7,3 +7,10 @@ Algoritmos de Búsqueda de caminos con nodos en un graph = Pathfinding
 -Dijkstra = calcular la menor distancia a recorrer desde el nodo actual hasta al de inicio
 
 -A* = Lo mismo que Dijkstra solo que evalua costo de transitabilidad
+
+
+
+teniendo varios nodos finales, como encotramos el mas cercano?
+
+Dividimos todo con voronoid: https://es.wikipedia.org/wiki/Pol%C3%ADgonos_de_Thiessen
+Despues los balanceamos usado: https://es.wikipedia.org/wiki/M%C3%A9todo_de_Newton
