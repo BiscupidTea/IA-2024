@@ -13,6 +13,7 @@ public class Vector2IntGrapf<NodeType>
             {
                 NodeType node = new NodeType();
                 node.SetCoordinate(new UnityEngine.Vector2Int(i, j));
+                node.SetBloqued(false);
                 nodes.Add(node);
             }
         }

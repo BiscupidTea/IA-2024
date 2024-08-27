@@ -14,16 +14,16 @@ public class AStarPathfinder<NodeType> : Pathfinder<NodeType> where NodeType : I
 
     protected override bool IsBloqued(NodeType node)
     {
-        throw new System.NotImplementedException();
+        return node.GetBloqued();
     }
 
     protected override int MoveToNeighborCost(NodeType A, NodeType b)
     {
-        throw new System.NotImplementedException();
+        return (A.GetNodeCost() - b.GetNodeCost());
     }
 
     protected override bool NodesEquals(NodeType A, NodeType B)
     {
-        throw new System.NotImplementedException();
+        return Equals(A, B);
     }
 }

@@ -4,7 +4,7 @@ public class DepthFirstPathfinder<NodeType> : Pathfinder<NodeType> where NodeTyp
 {
     protected override int Distance(NodeType A, NodeType B)
     {
-        throw new System.NotImplementedException();
+                return 0;
     }
 
     protected override ICollection<NodeType> GetNeighbors(NodeType node)
@@ -14,16 +14,16 @@ public class DepthFirstPathfinder<NodeType> : Pathfinder<NodeType> where NodeTyp
 
     protected override bool IsBloqued(NodeType node)
     {
-        throw new System.NotImplementedException();
+        return node.GetBloqued();
     }
 
     protected override int MoveToNeighborCost(NodeType A, NodeType b)
     {
-        throw new System.NotImplementedException();
+        return 0;
     }
 
     protected override bool NodesEquals(NodeType A, NodeType B)
     {
-        throw new System.NotImplementedException();
+        return Equals(A, B);
     }
 }

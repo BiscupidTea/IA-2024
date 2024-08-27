@@ -14,16 +14,16 @@ public class DijkstraPathfinder<NodeType> : Pathfinder<NodeType> where NodeType 
 
     protected override bool IsBloqued(NodeType node)
     {
-        throw new System.NotImplementedException();
+        return node.GetBloqued();
     }
 
     protected override int MoveToNeighborCost(NodeType A, NodeType b)
     {
-        throw new System.NotImplementedException();
+        return 0;
     }
 
     protected override bool NodesEquals(NodeType A, NodeType B)
     {
-        throw new System.NotImplementedException();
+        return Equals(A, B);
     }
 }

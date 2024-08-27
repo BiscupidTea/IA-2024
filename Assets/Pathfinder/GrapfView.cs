@@ -15,7 +15,7 @@ public class GrapfView : MonoBehaviour
             return;
         foreach (Node<Vector2Int> node in grapf.nodes)
         {
-            if (node.IsBloqued())
+            if (node.GetBloqued())
                 Gizmos.color = Color.red;
             else
                 Gizmos.color = Color.green;
