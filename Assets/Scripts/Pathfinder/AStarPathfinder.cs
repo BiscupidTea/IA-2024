@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class AStarPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coordinates> 
+public class AStarPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coordinates>
     where NodeType : INode<Coordinates>
     where Coordinates : IEquatable<Coordinates>
 {
-
     protected override int Distance(NodeType A, NodeType B)
     {
         throw new System.NotImplementedException();
     }
-    
+
     protected override ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph)
     {
-        throw new NotImplementedException();
+        return graph.GetNeighborsNodes(node.GetId());
     }
 
     protected override bool IsBloqued(NodeType node)

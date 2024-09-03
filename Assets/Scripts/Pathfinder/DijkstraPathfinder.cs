@@ -13,7 +13,7 @@ public class DijkstraPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Co
 
     protected override ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph)
     {
-        throw new NotImplementedException();
+        return graph.GetNeighborsNodes(node.GetId());
     }
 
     protected override bool IsBloqued(NodeType node)
