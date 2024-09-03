@@ -36,17 +36,17 @@ public class Vector2IntGrapf<NodeType> : IGraph<NodeType>
             SetNeighborsNodes(currentNode);
         }
         
-        nodes[40].SetBloqued(true);
-        nodes[41].SetBloqued(true);
-        nodes[42].SetBloqued(true);
-        nodes[43].SetBloqued(true);
-        nodes[44].SetBloqued(true);
-        nodes[45].SetBloqued(true);
-        nodes[46].SetBloqued(true);
-        nodes[47].SetBloqued(true);
-        nodes[51].SetBloqued(true);
-        nodes[61].SetBloqued(true);
-        nodes[71].SetBloqued(true);
+        // nodes[40].SetBloqued(true);
+        // nodes[41].SetBloqued(true);
+        // nodes[42].SetBloqued(true);
+        // nodes[43].SetBloqued(true);
+        // nodes[44].SetBloqued(true);
+        // nodes[45].SetBloqued(true);
+        // nodes[46].SetBloqued(true);
+        // nodes[47].SetBloqued(true);
+        // nodes[51].SetBloqued(true);
+        // nodes[61].SetBloqued(true);
+        // nodes[71].SetBloqued(true);
     }
 
     public void SetNeighborsNodes(NodeType currentNode)

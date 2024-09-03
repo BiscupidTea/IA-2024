@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class DepthFirstPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coordinates>
     where NodeType : INode<Coordinates>
@@ -13,7 +14,14 @@ public class DepthFirstPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, 
     
     protected override ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph)
     {
-        return graph.GetNeighborsNodes(node.GetId());
+        ICollection<NodeType> reverseNodes = new List<NodeType>();
+
+        foreach (NodeType currentNode in graph.GetNeighborsNodes(node.GetId()).Reverse())
+        {
+            reverseNodes.Add(currentNode);
+        }
+        
+        return reverseNodes;
     }
 
     protected override bool IsBloqued(NodeType node)
