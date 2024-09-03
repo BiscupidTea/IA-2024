@@ -24,7 +24,7 @@ public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<
         neightboursId.Add(newNeighbourId);
     }
 
-    public List<int> GetNeighbours()
+    public List<int> GetNeighboursID()
     {
         return neightboursId;
     }

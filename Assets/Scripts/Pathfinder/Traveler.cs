@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Traveler : MonoBehaviour
@@ -16,12 +17,20 @@ public class Traveler : MonoBehaviour
     public Algorithm AlgorithmType;
 
     private Vector2IntGrapf<Node<Vector2Int>> grapf;
+    [SerializeField] private GrapfView grapfView;
     private Pathfinder<Node<Vector2Int>, Vector2Int> Pathfinder;
+
+    [SerializeField] private Vector2Int grid;
+    [SerializeField] private int cellGap;
+    [SerializeField] private int startNode;
+    [SerializeField] private int endNode;
 
     void Start()
     {
-        grapf = new Vector2IntGrapf<Node<Vector2Int>>(10, 10);
+        grapf = new Vector2IntGrapf<Node<Vector2Int>>(grid.x, grid.y, cellGap, AlgorithmType);
 
+        grapfView.SetGrapfView(grapf);
+        
         switch (AlgorithmType)
         {
             case Algorithm.DepthFirstPathfinder:
@@ -37,10 +46,10 @@ public class Traveler : MonoBehaviour
                 Pathfinder = new AStarPathfinder<Node<Vector2Int>, Vector2Int>();
                 break;
         }
-
+        
         List<Node<Vector2Int>> path = Pathfinder.FindPath(
-            grapf.nodes[Random.Range(0, grapf.nodes.Count)],
-            grapf.nodes[Random.Range(0, grapf.nodes.Count)], grapf);
+            grapf.nodes[startNode],
+            grapf.nodes[endNode], grapf);
 
         StartCoroutine(Move(path));
     }

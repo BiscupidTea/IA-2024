@@ -5,14 +5,15 @@ public class AStarPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coord
     where NodeType : INode<Coordinates>
     where Coordinates : IEquatable<Coordinates>
 {
+
     protected override int Distance(NodeType A, NodeType B)
     {
         throw new System.NotImplementedException();
     }
-
-    protected override ICollection<NodeType> GetNeighbors(NodeType node)
+    
+    protected override ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     protected override bool IsBloqued(NodeType node)

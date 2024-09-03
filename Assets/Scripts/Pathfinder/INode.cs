@@ -17,5 +17,5 @@ public interface INode<Coordinate> : INode where Coordinate : IEquatable<Coordin
     public Coordinate GetCoordinate();
 
     public void AddNeighbour(int newNeighbourId);
-    public List<int> GetNeighbours();
+    public List<int> GetNeighboursID();
 }
