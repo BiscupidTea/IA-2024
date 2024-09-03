@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class GrapfView : MonoBehaviour
 {
-    public Vector2IntGrapf<Node<Vector2Int>> grapf;
+    private Vector2IntGrapf<Node<Vector2Int>> grapf;
 
-    void Start()
+    void Start(Vector2IntGrapf<Node<Vector2Int>> grapf)
     {
-        grapf = new Vector2IntGrapf<Node<Vector2Int>>(10, 10);
+        this.grapf = grapf;
     }
 
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying)
             return;
-        foreach (Node<Vector2Int> node in grapf.nodes)
+        foreach (Node<Vector2Int> node in grapf.nodes.Values)
         {
             if (node.GetBloqued())
                 Gizmos.color = Color.red;

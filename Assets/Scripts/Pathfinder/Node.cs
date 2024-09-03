@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<Coordinate>
 {
+    private int Id;
     private Coordinate coordinate;
     private bool isBlocked;
     private int nodeCost;
-    private List<INode<Coordinate>> neightbours = new List<INode<Coordinate>>();
+    private List<int> neightboursId = new List<int>();
 
     public void SetCoordinate(Coordinate newCoordinate)
     {
@@ -18,14 +19,24 @@ public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<
         return coordinate;
     }
 
-    public void AddNeighbour(Node<Coordinate> newNeighbour)
+    public void AddNeighbour(int newNeighbourId)
     {
-        neightbours.Add(newNeighbour);
+        neightboursId.Add(newNeighbourId);
     }
 
-    public List<INode<Coordinate>> GetNeighbours()
+    public List<int> GetNeighbours()
     {
-        return neightbours;
+        return neightboursId;
+    }
+
+    public int GetId()
+    {
+        return Id;
+    }
+
+    public void SetId(int Id)
+    {
+        this.Id = Id;
     }
 
     public bool GetBloqued()

@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 
-public abstract class Pathfinder<NodeType> where NodeType : INode
+public abstract class Pathfinder<NodeType, Coordinates>
+    where NodeType : INode<Coordinates>
+    where Coordinates : IEquatable<Coordinates>
 {
-    public List<NodeType> FindPath(NodeType startNode, NodeType destinationNode, ICollection<NodeType> graph)
+    public List<NodeType> FindPath(NodeType startNode, NodeType destinationNode, IGraph<NodeType> graph)
     {
         Dictionary<NodeType, (NodeType Parent, int AcumulativeCost, int Heuristic)> nodes =
             new Dictionary<NodeType, (NodeType Parent, int AcumulativeCost, int Heuristic)>();
@@ -40,7 +43,7 @@ public abstract class Pathfinder<NodeType> where NodeType : INode
                 return GeneratePath(startNode, destinationNode);
             }
 
-            foreach (NodeType neighbor in GetNeighbors(currentNode))
+            foreach (NodeType neighbor in GetNeighbors(currentNode, graph))
             {
                 if (!nodes.ContainsKey(neighbor) ||
                 IsBloqued(neighbor) ||
@@ -83,7 +86,7 @@ public abstract class Pathfinder<NodeType> where NodeType : INode
         }
     }
 
-    protected abstract ICollection<NodeType> GetNeighbors(NodeType node);
+    protected abstract ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph);
 
     protected abstract int Distance(NodeType A, NodeType B);
 

@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public class BreadthPathfinder<NodeType> : Pathfinder<NodeType> where NodeType : INode
+public class BreadthPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coordinates> 
+    where NodeType : INode<Coordinates>
+    where Coordinates : IEquatable<Coordinates>
 {
     protected override int Distance(NodeType A, NodeType B)
     {
         return 0;
     }
 
-    protected override ICollection<NodeType> GetNeighbors(NodeType node)
+    protected override ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph)
     {
-        throw new System.NotImplementedException();
+        return graph.GetNeighborsNodes(node.GetId());
     }
 
     protected override bool IsBloqued(NodeType node)

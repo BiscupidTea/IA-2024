@@ -1,32 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Traveler : MonoBehaviour
 {
-    public GrapfView grapfView;
-    
-    private AStarPathfinder<Node<Vector2Int>> Pathfinder;
-    //private DijstraPathfinder<Node<Vector2Int>> Pathfinder;
-    //private DepthFirstPathfinder<Node<Vector2Int>> Pathfinder;
-    //private BreadthPathfinder<Node<Vector2Int>> Pathfinder;
+    public enum Algorithm
+    {
+        DepthFirstPathfinder = 0,
+        BreadthPathfinder,
+        DijstraPathfinder,
+        AStarPathfinder,
+    }
 
-    private Node<Vector2Int> startNode; 
-    private Node<Vector2Int> destinationNode;
+    public Algorithm AlgorithmType;
+
+    private Vector2IntGrapf<Node<Vector2Int>> grapf;
+    private Pathfinder<Node<Vector2Int>, Vector2Int> Pathfinder;
 
     void Start()
     {
-        startNode = new Node<Vector2Int>();
-        startNode.SetCoordinate(new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+        grapf = new Vector2IntGrapf<Node<Vector2Int>>(10, 10);
 
-        destinationNode = new Node<Vector2Int>();
-        destinationNode.SetCoordinate(new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+        switch (AlgorithmType)
+        {
+            case Algorithm.DepthFirstPathfinder:
+                Pathfinder = new DepthFirstPathfinder<Node<Vector2Int>, Vector2Int>();
+                break;
+            case Algorithm.BreadthPathfinder:
+                Pathfinder = new BreadthPathfinder<Node<Vector2Int>, Vector2Int>();
+                break;
+            case Algorithm.DijstraPathfinder:
+                Pathfinder = new DijkstraPathfinder<Node<Vector2Int>, Vector2Int>();
+                break;
+            case Algorithm.AStarPathfinder:
+                Pathfinder = new AStarPathfinder<Node<Vector2Int>, Vector2Int>();
+                break;
+        }
 
-        List<Node<Vector2Int>> path = Pathfinder.FindPath(startNode, destinationNode, grapfView.grapf.nodes);
+        List<Node<Vector2Int>> path = Pathfinder.FindPath(
+            grapf.nodes[Random.Range(0, grapf.nodes.Count)],
+            grapf.nodes[Random.Range(0, grapf.nodes.Count)], grapf);
+
         StartCoroutine(Move(path));
     }
 
-    public IEnumerator Move(List<Node<Vector2Int>> path) 
+    public IEnumerator Move(List<Node<Vector2Int>> path)
     {
         foreach (Node<Vector2Int> node in path)
         {

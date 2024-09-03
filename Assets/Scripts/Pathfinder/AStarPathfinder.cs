@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-public class AStarPathfinder<NodeType> : Pathfinder<NodeType> where NodeType : INode
+public class AStarPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coordinates> 
+    where NodeType : INode<Coordinates>
+    where Coordinates : IEquatable<Coordinates>
 {
     protected override int Distance(NodeType A, NodeType B)
     {

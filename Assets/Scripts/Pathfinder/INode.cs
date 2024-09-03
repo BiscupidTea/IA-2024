@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public interface INode
 {
+    public int GetId();
+    public void SetId(int Id);
     public bool GetBloqued();
     public void SetBloqued(bool BlockState);
     public int GetNodeCost();
@@ -13,7 +15,7 @@ public interface INode<Coordinate> : INode where Coordinate : IEquatable<Coordin
 {
     public void SetCoordinate(Coordinate newCoordinate);
     public Coordinate GetCoordinate();
-    
-    public void AddNeighbour(Node<Coordinate> newNeighbour);
-    public List<INode<Coordinate>> GetNeighbours();
+
+    public void AddNeighbour(int newNeighbourId);
+    public List<int> GetNeighbours();
 }
