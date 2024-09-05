@@ -7,8 +7,8 @@ public abstract class Pathfinder<NodeType, Coordinates>
 {
     public List<NodeType> FindPath(NodeType startNode, NodeType destinationNode, IGraph<NodeType> graph)
     {
-        Dictionary<NodeType, (NodeType Parent, int AcumulativeCost, int Heuristic)> nodes =
-            new Dictionary<NodeType, (NodeType Parent, int AcumulativeCost, int Heuristic)>();
+        Dictionary<NodeType, (NodeType Parent, int AcumulativeCost, float Heuristic)> nodes =
+            new Dictionary<NodeType, (NodeType Parent, int AcumulativeCost, float Heuristic)>();
 
         foreach (NodeType node in graph)
         {
@@ -58,7 +58,7 @@ public abstract class Pathfinder<NodeType, Coordinates>
 
                 if (!openList.Contains(neighbor) || tentativeNewAcumulatedCost < nodes[currentNode].AcumulativeCost)
                 {
-                    nodes[neighbor] = (currentNode, tentativeNewAcumulatedCost, Distance(neighbor, destinationNode));
+                    nodes[neighbor] = (currentNode, tentativeNewAcumulatedCost, Distance(neighbor, destinationNode, graph));
 
                     if (!openList.Contains(neighbor))
                     {
@@ -88,7 +88,7 @@ public abstract class Pathfinder<NodeType, Coordinates>
 
     protected abstract ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph);
 
-    protected abstract int Distance(NodeType A, NodeType B);
+    protected abstract float Distance(NodeType A, NodeType B, IGraph<NodeType> graph);
 
     protected abstract bool NodesEquals(NodeType A, NodeType B);
 

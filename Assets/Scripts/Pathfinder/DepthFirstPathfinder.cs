@@ -7,7 +7,7 @@ public class DepthFirstPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, 
     where Coordinates : IEquatable<Coordinates>
 {
 
-    protected override int Distance(NodeType A, NodeType B)
+    protected override float Distance(NodeType A, NodeType B,  IGraph<NodeType> graph)
     {
         return 0;
     }

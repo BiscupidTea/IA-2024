@@ -36,17 +36,17 @@ public class Vector2IntGrapf<NodeType> : IGraph<NodeType>
             SetNeighborsNodes(currentNode);
         }
         
-        // nodes[40].SetBloqued(true);
-        // nodes[41].SetBloqued(true);
-        // nodes[42].SetBloqued(true);
-        // nodes[43].SetBloqued(true);
-        // nodes[44].SetBloqued(true);
-        // nodes[45].SetBloqued(true);
-        // nodes[46].SetBloqued(true);
-        // nodes[47].SetBloqued(true);
-        // nodes[51].SetBloqued(true);
-        // nodes[61].SetBloqued(true);
-        // nodes[71].SetBloqued(true);
+        nodes[40].SetNodeCost(50);
+        nodes[41].SetNodeCost(50);
+        nodes[42].SetNodeCost(50);
+        nodes[43].SetNodeCost(50);
+        nodes[44].SetNodeCost(50);
+        nodes[45].SetNodeCost(50);
+        nodes[46].SetNodeCost(50);
+        nodes[47].SetNodeCost(50);
+        nodes[51].SetNodeCost(50);
+        nodes[61].SetNodeCost(50);
+        nodes[71].SetNodeCost(50);
     }
 
     public void SetNeighborsNodes(NodeType currentNode)
@@ -84,6 +84,11 @@ public class Vector2IntGrapf<NodeType> : IGraph<NodeType>
         }
 
         return Neighbors;
+    }
+
+    public float GetDistanceBetweenNodes(NodeType A, NodeType B)
+    {
+        return Vector2Int.Distance(A.GetCoordinate(), B.GetCoordinate());
     }
 
     public IEnumerator<NodeType> GetEnumerator()

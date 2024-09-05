@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class DijkstraPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coordinates> 
+public class DijkstraPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coordinates>
     where NodeType : INode<Coordinates>
     where Coordinates : IEquatable<Coordinates>
 {
-
-    protected override int Distance(NodeType A, NodeType B)
+    protected override float Distance(NodeType A, NodeType B, IGraph<NodeType> graph)
     {
-        throw new System.NotImplementedException();
+        return graph.GetDistanceBetweenNodes(A, B);
     }
 
     protected override ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph)

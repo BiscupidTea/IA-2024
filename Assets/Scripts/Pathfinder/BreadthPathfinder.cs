@@ -6,7 +6,7 @@ public class BreadthPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coo
     where NodeType : INode<Coordinates>
     where Coordinates : IEquatable<Coordinates>
 {
-    protected override int Distance(NodeType A, NodeType B)
+    protected override float Distance(NodeType A, NodeType B,  IGraph<NodeType> graph)
     {
         return 0;
     }
