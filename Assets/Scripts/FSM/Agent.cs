@@ -2,21 +2,24 @@ using System;
 using UnityEngine;
 public enum Behaviours
 {
-    Chase, Patrol, Explode
+    Move, Mining, Strike, Deposit
 }
 
 public enum Flags
 {
-    OnTargetReach, OnTargetLost, OnTargetNear
+    OnDepositGold, OnMining, OnInventoryFull, OnInventoryEmpty, OnRequiresFood
 }
 
-public class Agent : MonoBehaviour
+public class Agent<NodeType> : MonoBehaviour where NodeType : INode<Vector2Int>
 {
     private FSM<Behaviours, Flags> fsm;
-    [SerializeField] private Transform target;
 
-    [SerializeField] private Transform patrolPoint1;
-    [SerializeField] private Transform patrolPoint2;
+    public Transform[] PathPoints;
+
+    public NodeType Target;
+    
+    public NodeType CU;
+    public NodeType Mine;
 
     [SerializeField] private float speed;
     [SerializeField] private float explodeDistance;
@@ -27,21 +30,26 @@ public class Agent : MonoBehaviour
     {
         fsm = new FSM<Behaviours, Flags>();
 
-        //Add states and transitions
-        fsm.AddBehaviour<ChaseState>(Behaviours.Chase,
-            onTickParameters: () => { return new object[] { transform, target, speed, explodeDistance, lostDistance }; });
+        fsm.AddBehaviour<MoveState<NodeType>>(Behaviours.Move,
+            onEnterParameters: () => { return new object[] { Target }; },
+            onTickParameters: () => { return new object[] { speed, transform, PathPoints}; });
+        
+        fsm.AddBehaviour<MiningState>(Behaviours.Mining,
+            onTickParameters: () => { return new object[] { 0.5f, 3}; });
+        
+        fsm.AddBehaviour<DepositState>(Behaviours.Deposit,
+            onTickParameters: () => { return new object[] { 0.5f, 3}; });
 
-        fsm.AddBehaviour<PatrolState>(Behaviours.Patrol,
-            onTickParameters: () => { return new object[] { transform, patrolPoint1, patrolPoint2, target, speed, chaseDistance }; });
+        fsm.SetTransition(Behaviours.Move, Flags.OnMining, Behaviours.Mining);
+        fsm.SetTransition(Behaviours.Mining, Flags.OnInventoryFull, Behaviours.Move, () => { Target = CU;});
+        
+        fsm.SetTransition(Behaviours.Move, Flags.OnDepositGold, Behaviours.Deposit);
+        fsm.SetTransition(Behaviours.Deposit, Flags.OnInventoryEmpty, Behaviours.Move, () => { Target = Mine;});
+        
+        fsm.SetTransition(Behaviours.Mining, Flags.OnRequiresFood, Behaviours.Strike);
+        fsm.SetTransition(Behaviours.Strike, Flags.OnRequiresFood, Behaviours.Mining);
 
-        fsm.AddBehaviour<ExplodeState>(Behaviours.Explode);
-
-        fsm.SetTransition(Behaviours.Patrol, Flags.OnTargetNear, Behaviours.Chase, () => { Debug.Log("Te Vi!"); });
-        fsm.SetTransition(Behaviours.Chase, Flags.OnTargetReach, Behaviours.Explode);
-        fsm.SetTransition(Behaviours.Chase, Flags.OnTargetLost, Behaviours.Patrol);
-
-
-        fsm.ForcedState(Behaviours.Patrol);
+        fsm.ForcedState(Behaviours.Move);
     }
 
     private void Update()

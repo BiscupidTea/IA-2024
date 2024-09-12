@@ -1,6 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
+public enum NodeTypeCost
+{
+    None,
+    GoldMine,
+    TownCenter,
+    Mountain,
+    Plateau,
+    Plain,
+}
+
 public interface INode
 {
     public int GetId();
@@ -9,6 +19,8 @@ public interface INode
     public void SetBloqued(bool BlockState);
     public int GetNodeCost();
     public void SetNodeCost(int NodeCost);
+    public void SetNodeType(NodeTypeCost NodeType);
+    public NodeTypeCost GetNodeType();
 }
 
 public interface INode<Coordinate> : INode where Coordinate : IEquatable<Coordinate>

@@ -26,7 +26,7 @@ public class Traveler : MonoBehaviour
     void Start()
     {
         grapf = new Vector2IntGrapf<Node<Vector2Int>>(grid.x, grid.y, cellGap, AlgorithmType);
-
+        
         grapfView.SetGrapfView(grapf);
         
         switch (AlgorithmType)

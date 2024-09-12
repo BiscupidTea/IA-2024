@@ -8,6 +8,7 @@ public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<
     private bool isBlocked;
     private int nodeCost;
     private List<int> neightboursId = new List<int>();
+    private NodeTypeCost nodeTypeCost;
 
     public void SetCoordinate(Coordinate newCoordinate)
     {
@@ -57,5 +58,15 @@ public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<
     public void SetNodeCost(int NodeCost)
     {
         nodeCost = NodeCost;
+    }
+
+    public void SetNodeType(NodeTypeCost nodeType)
+    {
+        nodeTypeCost = nodeType;
+    }
+
+    public NodeTypeCost GetNodeType()
+    {
+        return nodeTypeCost;
     }
 }

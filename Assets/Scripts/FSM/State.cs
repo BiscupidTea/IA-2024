@@ -57,134 +57,146 @@ public abstract class State
     public abstract BehavioursActions GetOnExitbehaviour(params object[] parameters);
 }
 
-public sealed class ChaseState : State
+public sealed class MoveState<NodeType> : State where NodeType : INode<Vector2Int>
 {
+    private int currentTargetPoint;
+    private Transform[] nodesPath;
+    private NodeType target;
+
     public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
     {
-        return default;
-    }
-
-    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
-    {
-        return default;
+        throw new NotImplementedException();
     }
 
     public override BehavioursActions GetTickbehaviour(params object[] parameters)
     {
-        Transform OwnerTransform = parameters[0] as Transform;
-        Transform TargetTransform = parameters[1] as Transform;
-        float speed = Convert.ToSingle(parameters[2]);
-        float explodeDistance = Convert.ToSingle(parameters[3]);
-        float lostDistance = Convert.ToSingle(parameters[4]);
+        float speed = Convert.ToSingle(parameters[0]);
+        Transform ownerTransform = parameters[1] as Transform;
+        nodesPath = parameters[2] as Transform[];
+        
 
         BehavioursActions behaviour = new BehavioursActions();
 
         behaviour.AddMainThreadBehaviour(0, () =>
         {
-            OwnerTransform.position += (TargetTransform.position - OwnerTransform.position).normalized * speed * Time.deltaTime;
+            if (Vector3.Distance(ownerTransform.position, nodesPath[currentTargetPoint].position) < 0.2f)
+            {
+                currentTargetPoint++;
+            }
+
+            ownerTransform.position +=
+                (nodesPath[currentTargetPoint].position - ownerTransform.position).normalized * speed * Time.deltaTime;
         });
+
+        behaviour.SetTransitionBehaviour(() =>
+        {
+            if (currentTargetPoint >= nodesPath.Length)
+            {
+                if (target.GetNodeType() == NodeTypeCost.TownCenter)
+                {
+                    OnFlag?.Invoke(Flags.OnDepositGold);
+                }
+                else
+                {
+                    OnFlag?.Invoke(Flags.OnMining);
+                }
+            }
+        });
+
+        return behaviour;
+    }
+
+    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public sealed class MiningState : State
+{
+    private int totalGold;
+    private int goldForFood;
+    private int totalFood;
+
+    private float timer;
+
+    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
+    {
+        BehavioursActions behaviour = new BehavioursActions();
 
         behaviour.AddMultitreadableBehaviours(0, () =>
         {
-            Debug.Log("Whistle!");
-        });
-
-        behaviour.SetTransitionBehaviour(() =>
-        {
-            if (Vector3.Distance(TargetTransform.position, OwnerTransform.position) < explodeDistance)
-            {
-                OnFlag?.Invoke(Flags.OnTargetReach);
-            }
-            else if (Vector3.Distance(TargetTransform.position, OwnerTransform.position) > lostDistance)
-            {
-                OnFlag?.Invoke(Flags.OnTargetLost);
-            }
+            timer = 0;
+            goldForFood = 0;
         });
 
         return behaviour;
     }
-}
-
-public sealed class PatrolState : State
-{
-    private Transform actualTarget;
-    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
-    {
-        return default;
-    }
-
-    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
-    {
-        return default;
-    }
 
     public override BehavioursActions GetTickbehaviour(params object[] parameters)
     {
-        Transform ownerTransform = parameters[0] as Transform;
-        Transform wayPoint1 = parameters[1] as Transform;
-        Transform wayPoint2 = parameters[2] as Transform;
-        Transform ChaseTarget = parameters[3] as Transform;
-        float speed = Convert.ToSingle(parameters[4]);
-        float chaseDistance = Convert.ToSingle(parameters[5]);
+        float MineTime = Convert.ToSingle(parameters[0]);
+        int goldBeforeFood = Convert.ToInt32(parameters[1]);
 
         BehavioursActions behaviour = new BehavioursActions();
 
         behaviour.AddMainThreadBehaviour(0, () =>
         {
-            if (actualTarget == null)
+            timer += Time.deltaTime;
+
+            if (timer >= MineTime)
             {
-                actualTarget = wayPoint1;
+                totalGold += 1;
+                goldForFood += 1;
+                timer = 0;
             }
 
-            if (Vector3.Distance(ownerTransform.position, actualTarget.position) < 0.2f)
+            if (goldForFood >= goldBeforeFood)
             {
-                if (actualTarget == wayPoint1)
-                    actualTarget = wayPoint2;
-                else
-                    actualTarget = wayPoint1;
+                goldForFood = 0;
+                totalFood -= 1;
             }
-            ownerTransform.position += (actualTarget.position - ownerTransform.position).normalized * speed * Time.deltaTime;
         });
 
         behaviour.SetTransitionBehaviour(() =>
         {
-            if (Vector3.Distance(ownerTransform.position, ChaseTarget.position) < chaseDistance)
+            if (totalGold >= 15)
             {
-                OnFlag?.Invoke(Flags.OnTargetNear);
+                OnFlag?.Invoke(Flags.OnDepositGold);
+            }
+        });
+
+        behaviour.SetTransitionBehaviour(() =>
+        {
+            if (totalGold >= 15)
+            {
+                OnFlag?.Invoke(Flags.OnRequiresFood);
             }
         });
 
         return behaviour;
     }
-}
-
-public sealed class ExplodeState : State
-{
-    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
-    {
-        BehavioursActions behaviour = new BehavioursActions();
-
-        behaviour.AddMultitreadableBehaviours(0,() =>
-        {
-            Debug.Log("Explode!");
-        });
-        return behaviour;
-    }
 
     public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public sealed class DepositState : State
+{
+    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
     {
         return default;
     }
 
     public override BehavioursActions GetTickbehaviour(params object[] parameters)
     {
-        BehavioursActions behaviour = new BehavioursActions();
+        return default;
+    }
 
-        behaviour.AddMultitreadableBehaviours(0,() =>
-        {
-            Debug.Log("F");
-        });
-
-        return behaviour;
+    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
+    {
+        return default;
     }
 }

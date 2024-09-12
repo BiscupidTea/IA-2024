@@ -35,18 +35,6 @@ public class Vector2IntGrapf<NodeType> : IGraph<NodeType>
         {
             SetNeighborsNodes(currentNode);
         }
-        
-        nodes[40].SetNodeCost(50);
-        nodes[41].SetNodeCost(50);
-        nodes[42].SetNodeCost(50);
-        nodes[43].SetNodeCost(50);
-        nodes[44].SetNodeCost(50);
-        nodes[45].SetNodeCost(50);
-        nodes[46].SetNodeCost(50);
-        nodes[47].SetNodeCost(50);
-        nodes[51].SetNodeCost(50);
-        nodes[61].SetNodeCost(50);
-        nodes[71].SetNodeCost(50);
     }
 
     public void SetNeighborsNodes(NodeType currentNode)
