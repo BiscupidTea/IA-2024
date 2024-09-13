@@ -155,7 +155,7 @@ MonoBehaviour:
   grid: {x: 10, y: 10}
   grapfView: {fileID: 1929479615}
   cellGap: 1
-  goldMineCuantity: 2
+  goldMineCuantity: 1
   minersCuantity: 1
   minerPrefab: {fileID: 7477985091483319053, guid: a360e4a2a3878614d92d9d3e30d80d82, type: 3}
 --- !u!4 &14610554

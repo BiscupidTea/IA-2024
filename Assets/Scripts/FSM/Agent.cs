@@ -16,15 +16,18 @@ public class Agent : MonoBehaviour
 
     public Transform[] PathPoints;
 
-    public INode<Vector2Int> Target;
+    public Node<CoordinateType> Target;
     
-    public INode<Vector2Int> CU;
-    public INode<Vector2Int> Mine;
+    public Node<CoordinateType> CU;
+    public Node<CoordinateType> Mine;
 
     [SerializeField] private float speed;
 
-    public void StartMiner( Grapf<Node<CoordinateType>,CoordinateType> grapfh)
+    public void StartMiner( Grapf<Node<CoordinateType>,CoordinateType> grapfh, Node<CoordinateType> CU, Node<CoordinateType> Mine)
     {
+        this.CU = CU;
+        this.Mine = Mine;
+        
         fsm = new FSM<Behaviours, Flags>();
 
         fsm.AddBehaviour<MoveState<Node<CoordinateType>,CoordinateType>>(Behaviours.Move,

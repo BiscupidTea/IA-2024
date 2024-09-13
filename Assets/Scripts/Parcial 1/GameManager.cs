@@ -15,10 +15,10 @@ public class GameManager : MonoBehaviour
     public int minersCuantity;
 
     [SerializeField] private GameObject minerPrefab;
-    private Node<Vector2Int> townCenter;
-    private Node<Vector2Int> mine;
+    private Node<CoordinateType> townCenter;
+    private Node<CoordinateType> mine;
 
-    private List<Agent> miners;
+    private List<Agent> miners = new List<Agent>();
 
     private void Start()
     {
@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         if (currentNode.GetNodeType() == NodeTypeCost.None)
         {
             currentNode.SetNodeType(NodeTypeCost.TownCenter);
+            townCenter = currentNode;
         }
 
         //Set Gold Mine
@@ -54,13 +55,14 @@ public class GameManager : MonoBehaviour
             if (currentNode.GetNodeType() == NodeTypeCost.None)
             {
                 currentNode.SetNodeType(NodeTypeCost.GoldMine);
+                mine = currentNode;
             }
         }
 
         //Set Mountains
 
         //Set Default Nodes Type
-        foreach ( Node<CoordinateType> node in grapfh)
+        foreach (Node<CoordinateType> node in grapfh)
         {
             if (node.GetNodeType() == NodeTypeCost.None)
             {
@@ -69,20 +71,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetMainers( Grapf<Node<CoordinateType>,CoordinateType> grapfh)
+    private void SetMainers(Grapf<Node<CoordinateType>, CoordinateType> grapfh)
     {
+        GameObject newMiner;
+
         for (int i = 0; i < minersCuantity; i++)
         {
-            GameObject currentMiner = Instantiate(minerPrefab.gameObject,
-                new Vector3(townCenter.GetCoordinate().x, townCenter.GetCoordinate().y, 0),
+            newMiner = Instantiate(minerPrefab,
+                new Vector3(townCenter.GetCoordinate().GetXY()[0], townCenter.GetCoordinate().GetXY()[1], 0),
                 Quaternion.identity, transform);
 
-            miners.Add(currentMiner.GetComponent<Agent>());
+            miners.Add(newMiner.GetComponent<Agent>());
         }
 
         foreach (Agent currentMiner in miners)
         {
-            currentMiner.StartMiner(grapf);
+            currentMiner.StartMiner(grapf, townCenter, mine);
         }
     }
 }
