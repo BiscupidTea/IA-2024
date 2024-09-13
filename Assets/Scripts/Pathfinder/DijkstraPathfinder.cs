@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class DijkstraPathfinder<NodeType, Coordinates> : Pathfinder<NodeType, Coordinates>
-    where NodeType : INode<Coordinates>
-    where Coordinates : IEquatable<Coordinates>
+public class DijkstraPathfinder<NodeType, CoordType> : Pathfinder<NodeType, CoordType>
+    where NodeType : INode<CoordType>
+    where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
     protected override float Distance(NodeType A, NodeType B, IGraph<NodeType> graph)
     {

@@ -30,4 +30,6 @@ public interface INode<Coordinate> : INode where Coordinate : IEquatable<Coordin
 
     public void AddNeighbour(int newNeighbourId);
     public List<int> GetNeighboursID();
+
+    public void Init(Coordinate coordinate);
 }

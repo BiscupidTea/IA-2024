@@ -57,40 +57,56 @@ public abstract class State
     public abstract BehavioursActions GetOnExitbehaviour(params object[] parameters);
 }
 
-public sealed class MoveState<NodeType> : State where NodeType : INode<Vector2Int>
+public sealed class MoveState<NodeType, CoordType> : State
+    where NodeType : INode<CoordType>, new()
+    where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
     private int currentTargetPoint;
-    private Transform[] nodesPath;
+    private List<NodeType> nodesPath;
     private NodeType target;
+    private NodeType currentNode;
+
+    private Pathfinder<NodeType, CoordType> Pathfinder = new AStarPathfinder<NodeType, CoordType>();
+    private Grapf<NodeType, CoordType> grapfh;
 
     public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
     {
-        throw new NotImplementedException();
+        List<CoordType> a = new List<CoordType>();
+        grapfh = parameters[0] as Grapf<NodeType, CoordType>;
+        currentNode = (NodeType)parameters[1];
+        target = (NodeType)parameters[2];
+
+        nodesPath = Pathfinder.FindPath(currentNode, target, this.grapfh);
+
+        return default;
     }
 
     public override BehavioursActions GetTickbehaviour(params object[] parameters)
     {
         float speed = Convert.ToSingle(parameters[0]);
         Transform ownerTransform = parameters[1] as Transform;
-        nodesPath = parameters[2] as Transform[];
-        
+        nodesPath = parameters[2] as List<NodeType>;
+
 
         BehavioursActions behaviour = new BehavioursActions();
 
         behaviour.AddMainThreadBehaviour(0, () =>
         {
-            if (Vector3.Distance(ownerTransform.position, nodesPath[currentTargetPoint].position) < 0.2f)
+            if (Vector3.Distance(ownerTransform.position,
+                    new Vector3(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
+                        nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1], 0)) < 0.2f)
             {
                 currentTargetPoint++;
             }
 
             ownerTransform.position +=
-                (nodesPath[currentTargetPoint].position - ownerTransform.position).normalized * speed * Time.deltaTime;
+                (new Vector3(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
+                    nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1], 0) - ownerTransform.position).normalized * speed * Time.deltaTime;
         });
 
         behaviour.SetTransitionBehaviour(() =>
         {
-            if (currentTargetPoint >= nodesPath.Length)
+            if (currentTargetPoint >= nodesPath.Count)
             {
                 if (target.GetNodeType() == NodeTypeCost.TownCenter)
                 {
@@ -116,7 +132,7 @@ public sealed class MiningState : State
 {
     private int totalGold;
     private int goldForFood;
-    private int totalFood;
+    private int totalFood = 10;
 
     private float timer;
 

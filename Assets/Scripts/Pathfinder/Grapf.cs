@@ -3,26 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Vector2IntGrapf<NodeType> : IGraph<NodeType>
-    where NodeType : INode<Vector2Int>, new()
+public class Grapf<NodeType, CoordType> : IGraph<NodeType>
+    where NodeType : INode<CoordType>, new()
+    where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
     private int id = 0;
-    private Traveler.Algorithm algorithmType;
+    private Algorithm algorithmType;
     public IDictionary<int, NodeType> nodes = new Dictionary<int, NodeType>();
     private int nodeGap = 0;
 
-    public Vector2IntGrapf(int rows, int collumns, int nodeGap, Traveler.Algorithm algorithmType)
+    public Grapf(int rows, int collumns, int nodeGap, Algorithm algorithmType)
     {
         this.nodeGap = nodeGap;
         this.algorithmType = algorithmType;
-        Vector2Int startPosition = new Vector2Int(0, 0);
+        CoordinateType startPosition = new CoordinateType();
 
         for (int y = 0; y < collumns; y++)
         {
             for (int x = 0; x < rows; x++)
             {
+                
                 NodeType node = new NodeType();
-                node.SetCoordinate(new Vector2Int(startPosition.x + (x * nodeGap), startPosition.y - (y * nodeGap)));
+                CoordType coord = new CoordType();
+                
+                startPosition.Init(0,0);
+                
+                coord.Init(startPosition.GetXY()[0] + (x * nodeGap), startPosition.GetXY()[1] - (y * nodeGap));
+                
+                node.SetCoordinate(coord);
                 node.SetBloqued(false);
                 node.SetNodeCost(0);
                 node.SetId(id);
@@ -41,22 +49,23 @@ public class Vector2IntGrapf<NodeType> : IGraph<NodeType>
     {
         foreach (NodeType neighbor in nodes.Values)
         {
-            if (neighbor.GetCoordinate().x == currentNode.GetCoordinate().x &&
-                Math.Abs(neighbor.GetCoordinate().y - currentNode.GetCoordinate().y) == 1)
+            if (neighbor.GetCoordinate().GetXY()[0] == currentNode.GetCoordinate().GetXY()[0] &&
+                Math.Abs(neighbor.GetCoordinate().GetXY()[1] - currentNode.GetCoordinate().GetXY()[1]) == 1)
             {
                 currentNode.AddNeighbour(neighbor.GetId());
             }
 
-            else if (neighbor.GetCoordinate().y == currentNode.GetCoordinate().y &&
-                     Math.Abs(neighbor.GetCoordinate().x - currentNode.GetCoordinate().x) == 1)
+            else if (neighbor.GetCoordinate().GetXY()[1] == currentNode.GetCoordinate().GetXY()[1] &&
+                     Math.Abs(neighbor.GetCoordinate().GetXY()[0] - currentNode.GetCoordinate().GetXY()[0]) == 1)
             {
                 currentNode.AddNeighbour(neighbor.GetId());
             }
 
-            if (algorithmType == Traveler.Algorithm.AStarPathfinder || algorithmType == Traveler.Algorithm.DijstraPathfinder)
+            if (algorithmType == Algorithm.AStarPathfinder ||
+                algorithmType == Algorithm.DijstraPathfinder)
             {
-                if (Math.Abs(neighbor.GetCoordinate().y - currentNode.GetCoordinate().y) == 1 &&
-                    Math.Abs(neighbor.GetCoordinate().x - currentNode.GetCoordinate().x) == 1)
+                if (Math.Abs(neighbor.GetCoordinate().GetXY()[1] - currentNode.GetCoordinate().GetXY()[1]) == 1 &&
+                    Math.Abs(neighbor.GetCoordinate().GetXY()[0] - currentNode.GetCoordinate().GetXY()[0]) == 1)
                     currentNode.AddNeighbour(neighbor.GetId());
             }
         }
@@ -76,7 +85,7 @@ public class Vector2IntGrapf<NodeType> : IGraph<NodeType>
 
     public float GetDistanceBetweenNodes(NodeType A, NodeType B)
     {
-        return Vector2Int.Distance(A.GetCoordinate(), B.GetCoordinate());
+        return A.GetCoordinate().DistanceTo(B.GetCoordinate().GetXY());
     }
 
     public IEnumerator<NodeType> GetEnumerator()

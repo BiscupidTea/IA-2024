@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 14610554}
   - component: {fileID: 14610553}
-  - component: {fileID: 14610552}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -141,22 +140,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &14610552
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 14610551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9505ac3f90de150418590939da61c3e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabTownCenter: {fileID: 7978509183050391098, guid: 4c606f4e61f34104f920bab54b20b988, type: 3}
-  prefabGoldMine: {fileID: 3422331827361489090, guid: 83b0057999da39647baae27c33faf3a5, type: 3}
-  prefabPlain: {fileID: 8172274353743147553, guid: faaf4892e24e96f4695f958f0da4052d, type: 3}
-  prefabMountain: {fileID: 108228596832469596, guid: 77ee1b0fd38be0449a3072cbcbe40a5f, type: 3}
 --- !u!114 &14610553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,9 +153,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {x: 10, y: 10}
-  grapfView: {fileID: 14610552}
+  grapfView: {fileID: 1929479615}
   cellGap: 1
   goldMineCuantity: 2
+  minersCuantity: 1
+  minerPrefab: {fileID: 7477985091483319053, guid: a360e4a2a3878614d92d9d3e30d80d82, type: 3}
 --- !u!4 &14610554
 Transform:
   m_ObjectHideFlags: 0
@@ -601,7 +586,7 @@ Transform:
   m_GameObject: {fileID: 547314752}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 5, y: -5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2044,6 +2029,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761262973}
   m_CullTransparentMesh: 1
+--- !u!1 &1929479614
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1929479616}
+  - component: {fileID: 1929479615}
+  m_Layer: 0
+  m_Name: GrafView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1929479615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929479614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9505ac3f90de150418590939da61c3e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabTownCenter: {fileID: 7978509183050391098, guid: 4c606f4e61f34104f920bab54b20b988, type: 3}
+  prefabGoldMine: {fileID: 3422331827361489090, guid: 83b0057999da39647baae27c33faf3a5, type: 3}
+  prefabPlain: {fileID: 8172274353743147553, guid: faaf4892e24e96f4695f958f0da4052d, type: 3}
+  prefabMountain: {fileID: 108228596832469596, guid: 77ee1b0fd38be0449a3072cbcbe40a5f, type: 3}
+--- !u!4 &1929479616
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929479614}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2053,3 +2086,4 @@ SceneRoots:
   - {fileID: 649986542}
   - {fileID: 268623437}
   - {fileID: 14610554}
+  - {fileID: 1929479616}

@@ -10,28 +10,25 @@ public enum Flags
     OnDepositGold, OnMining, OnInventoryFull, OnInventoryEmpty, OnRequiresFood
 }
 
-public class Agent<NodeType> : MonoBehaviour where NodeType : INode<Vector2Int>
+public class Agent : MonoBehaviour
 {
     private FSM<Behaviours, Flags> fsm;
 
     public Transform[] PathPoints;
 
-    public NodeType Target;
+    public INode<Vector2Int> Target;
     
-    public NodeType CU;
-    public NodeType Mine;
+    public INode<Vector2Int> CU;
+    public INode<Vector2Int> Mine;
 
     [SerializeField] private float speed;
-    [SerializeField] private float explodeDistance;
-    [SerializeField] private float lostDistance;
-    [SerializeField] private float chaseDistance;
 
-    private void Start()
+    public void StartMiner( Grapf<Node<CoordinateType>,CoordinateType> grapfh)
     {
         fsm = new FSM<Behaviours, Flags>();
 
-        fsm.AddBehaviour<MoveState<NodeType>>(Behaviours.Move,
-            onEnterParameters: () => { return new object[] { Target }; },
+        fsm.AddBehaviour<MoveState<Node<CoordinateType>,CoordinateType>>(Behaviours.Move,
+            onEnterParameters: () => { return new object[] { Target, grapfh }; },
             onTickParameters: () => { return new object[] { speed, transform, PathPoints}; });
         
         fsm.AddBehaviour<MiningState>(Behaviours.Mining,
@@ -55,17 +52,5 @@ public class Agent<NodeType> : MonoBehaviour where NodeType : INode<Vector2Int>
     private void Update()
     {
         fsm.Tick();
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, lostDistance);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, chaseDistance);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, explodeDistance);
     }
 }

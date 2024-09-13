@@ -30,6 +30,11 @@ public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<
         return neightboursId;
     }
 
+    public void Init(Coordinate coordinate)
+    {
+        this.coordinate = coordinate;
+    }
+
     public int GetId()
     {
         return Id;

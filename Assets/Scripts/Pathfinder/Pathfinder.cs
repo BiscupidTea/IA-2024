@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-public abstract class Pathfinder<NodeType, Coordinates>
-    where NodeType : INode<Coordinates>
-    where Coordinates : IEquatable<Coordinates>
+public abstract class Pathfinder<NodeType, CoordType>
+    where NodeType : INode<CoordType>
+    where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
     public List<NodeType> FindPath(NodeType startNode, NodeType destinationNode, IGraph<NodeType> graph)
     {
