@@ -74,7 +74,7 @@ public abstract class Pathfinder<NodeType, CoordType>
         {
             List<NodeType> path = new List<NodeType>();
             NodeType currentNode = goalNode;
-
+            
             while (!NodesEquals(currentNode, startNode))
             {
                 path.Add(currentNode);
@@ -82,6 +82,7 @@ public abstract class Pathfinder<NodeType, CoordType>
             }
 
             path.Reverse();
+            
             return path;
         }
     }

@@ -43,7 +43,7 @@ public class GrapfView : MonoBehaviour
                     throw new ArgumentOutOfRangeException();
             }
 
-            Instantiate(prefab, new Vector3(node.GetCoordinate().GetXY()[0], node.GetCoordinate().GetXY()[1], 0),
+            Instantiate(prefab, new Vector3(node.GetCoordinate().GetXY()[0], node.GetCoordinate().GetXY()[1], 1),
                 Quaternion.identity, transform);
         }
     }

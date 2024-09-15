@@ -75,6 +75,7 @@ public sealed class MoveState<NodeType, CoordType> : State
         grapfh = parameters[0] as Grapf<NodeType, CoordType>;
         currentNode = (NodeType)parameters[1];
         target = (NodeType)parameters[2];
+        currentTargetPoint = 0;
 
         nodesPath = Pathfinder.FindPath(currentNode, target, this.grapfh);
 
@@ -85,23 +86,25 @@ public sealed class MoveState<NodeType, CoordType> : State
     {
         float speed = Convert.ToSingle(parameters[0]);
         Transform ownerTransform = parameters[1] as Transform;
-        nodesPath = parameters[2] as List<NodeType>;
-
 
         BehavioursActions behaviour = new BehavioursActions();
 
         behaviour.AddMainThreadBehaviour(0, () =>
         {
-            if (Vector3.Distance(ownerTransform.position,
-                    new Vector3(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
-                        nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1], 0)) < 0.2f)
+            if (Vector2.Distance(ownerTransform.position,
+                    new Vector2(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
+                        nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1])) < 0.1)
             {
                 currentTargetPoint++;
             }
-
-            ownerTransform.position +=
-                (new Vector3(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
-                    nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1], 0) - ownerTransform.position).normalized * speed * Time.deltaTime;
+            else
+            {
+                ownerTransform.position +=
+                    (new Vector3(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
+                        nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1], 0) - ownerTransform.position)
+                    .normalized *
+                    speed * Time.deltaTime;
+            }
         });
 
         behaviour.SetTransitionBehaviour(() =>
@@ -124,7 +127,7 @@ public sealed class MoveState<NodeType, CoordType> : State
 
     public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
     {
-        throw new NotImplementedException();
+        return default;
     }
 }
 
@@ -132,7 +135,7 @@ public sealed class MiningState : State
 {
     private int totalGold;
     private int goldForFood;
-    private int totalFood = 10;
+    private int totalFood;
 
     private float timer;
 
@@ -144,6 +147,8 @@ public sealed class MiningState : State
         {
             timer = 0;
             goldForFood = 0;
+            totalGold = (parameters[0] as MinerInventory).totalGold;
+            totalFood = (parameters[0] as MinerInventory).totalFood;
         });
 
         return behaviour;
@@ -165,12 +170,14 @@ public sealed class MiningState : State
                 totalGold += 1;
                 goldForFood += 1;
                 timer = 0;
+                //Debug.Log(totalGold);
             }
 
             if (goldForFood >= goldBeforeFood)
             {
                 goldForFood = 0;
                 totalFood -= 1;
+                //Debug.Log("Ñam");
             }
         });
 
@@ -178,14 +185,15 @@ public sealed class MiningState : State
         {
             if (totalGold >= 15)
             {
-                OnFlag?.Invoke(Flags.OnDepositGold);
+                (parameters[2] as MinerInventory).totalGold = totalGold;
+                (parameters[2] as MinerInventory).totalFood = totalFood;
+                OnFlag?.Invoke(Flags.OnInventoryFull);
             }
-        });
 
-        behaviour.SetTransitionBehaviour(() =>
-        {
-            if (totalGold >= 15)
+            if (totalFood <= 0)
             {
+                (parameters[2] as MinerInventory).totalGold = totalGold;
+                (parameters[2] as MinerInventory).totalFood = totalFood;
                 OnFlag?.Invoke(Flags.OnRequiresFood);
             }
         });
@@ -195,7 +203,7 @@ public sealed class MiningState : State
 
     public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
     {
-        throw new NotImplementedException();
+        return default;
     }
 }
 
@@ -208,7 +216,47 @@ public sealed class DepositState : State
 
     public override BehavioursActions GetTickbehaviour(params object[] parameters)
     {
+        BehavioursActions behaviour = new BehavioursActions();
+
+        behaviour.AddMultitreadableBehaviours(0, () => { (parameters[0] as MinerInventory).totalGold = 0; });
+
+        behaviour.SetTransitionBehaviour(() =>
+        {
+            if ((parameters[0] as MinerInventory).totalGold == 0)
+            {
+                OnFlag?.Invoke(Flags.OnInventoryEmpty);
+            }
+        });
+
+        return behaviour;
+    }
+
+    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
+    {
         return default;
+    }
+}
+
+public sealed class StrikeState : State
+{
+    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+
+    public override BehavioursActions GetTickbehaviour(params object[] parameters)
+    {
+        BehavioursActions behaviour = new BehavioursActions();
+
+        behaviour.SetTransitionBehaviour(() =>
+        {
+            if ((parameters[0] as MinerInventory).totalFood > 0)
+            {
+                OnFlag?.Invoke(Flags.OnEndStrike);
+            }
+        });
+
+        return behaviour;
     }
 
     public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
