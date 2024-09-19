@@ -1,5 +1,3 @@
-using System;
-using UnityEditor.Compilation;
 using UnityEngine;
 
 public enum Behaviours
@@ -8,6 +6,7 @@ public enum Behaviours
     Mining,
     Strike,
     Deposit,
+    Refill,
     Alarm,
 }
 

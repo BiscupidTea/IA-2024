@@ -14,12 +14,15 @@ public class GameManager : MonoBehaviour
 
     public int goldMineCuantity;
     public int minersCuantity;
+    public int caravansCuantity;
 
     [SerializeField] private GameObject minerPrefab;
+    [SerializeField] private GameObject caravanPrefab;
     private Node<CoordinateType> townCenter;
     private Node<CoordinateType> mine;
 
     private List<MinerAgent> miners = new List<MinerAgent>();
+    private List<CaravanAgent> caravans = new List<CaravanAgent>();
 
     private void Start()
     {
@@ -32,6 +35,7 @@ public class GameManager : MonoBehaviour
         grapfView.SetGrapfView(grapf);
 
         SetMainers(grapf);
+        SetCaravan(grapf);
     }
 
 
@@ -88,6 +92,25 @@ public class GameManager : MonoBehaviour
         foreach (MinerAgent currentMiner in miners)
         {
             currentMiner.StartAgent(grapf, townCenter, mine);
+        }
+    }
+    
+    private void SetCaravan(Grapf<Node<CoordinateType>, CoordinateType> grapfh)
+    {
+        GameObject newCaravan;
+
+        for (int i = 0; i < caravansCuantity; i++)
+        {
+            newCaravan = Instantiate(caravanPrefab,
+                new Vector3(townCenter.GetCoordinate().GetXY()[0], townCenter.GetCoordinate().GetXY()[1], 0),
+                Quaternion.identity, transform);
+
+            caravans.Add(newCaravan.GetComponent<CaravanAgent>());
+        }
+
+        foreach (CaravanAgent currentCaravan in caravans)
+        {
+            currentCaravan.StartAgent(grapf, townCenter, mine);
         }
     }
 

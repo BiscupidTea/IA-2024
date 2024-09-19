@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class MinerAgent : Agent
@@ -37,15 +36,15 @@ public class MinerAgent : Agent
         fsm.SetTransition(Behaviours.Move, Flags.OnStartMine, Behaviours.Mining, () =>
         {
             Target = Mine;
-            Debug.Log("Mining");
+            //Debug.Log("Mining");
         });
         fsm.SetTransition(Behaviours.Mining, Flags.OnInventoryFull, Behaviours.Move, () =>
         {
             Target = CU;
             StartPoint = Mine;
             flagToRaise = Flags.OnGoTownCenter;
-            Debug.Log("Go TownCenter, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
-                      " of food");
+           // Debug.Log("Go TownCenter, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
+           //           " of food");
         });
 
         fsm.SetTransition(Behaviours.Move, Flags.OnGoTownCenter, Behaviours.Deposit,
@@ -55,8 +54,8 @@ public class MinerAgent : Agent
             Target = Mine;
             StartPoint = CU;
             flagToRaise = Flags.OnStartMine;
-            Debug.Log("Go Mining, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
-                      " of food");
+           // Debug.Log("Go Mining, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
+            //          " of food");
         });
 
         fsm.SetTransition(Behaviours.Mining, Flags.OnRequiresFood, Behaviours.Strike, () => { Debug.Log("Strike!"); });

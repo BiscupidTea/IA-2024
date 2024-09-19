@@ -129,6 +129,8 @@ public sealed class MoveState<NodeType, CoordType> : State
     }
 }
 
+//Miner
+
 public sealed class MiningState<NodeType, CoordType> : State
     where NodeType : class, INode<CoordType>, new()
     where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
@@ -175,7 +177,7 @@ public sealed class MiningState<NodeType, CoordType> : State
                     totalGold += 1;
                     goldForFood += 1;
                     timer = 0;
-                    Debug.Log(totalGold);
+                    // Debug.Log(totalGold);
                 }
                 else
                 {
@@ -187,7 +189,7 @@ public sealed class MiningState<NodeType, CoordType> : State
             {
                 goldForFood = 0;
                 totalFood -= 1;
-                Debug.Log("Ñam");
+                // Debug.Log("Ñam");
             }
         });
 
@@ -297,7 +299,11 @@ public sealed class StrikeState<NodeType, CoordType> : State
     }
 }
 
-public sealed class DepositFoodState : State
+//Caravan
+
+public sealed class DepositFoodState<NodeType, CoordType> : State
+    where NodeType : class, INode<CoordType>, new()
+    where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
     public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
     {
@@ -308,17 +314,53 @@ public sealed class DepositFoodState : State
     {
         BehavioursActions behaviour = new BehavioursActions();
 
+        behaviour.AddMainThreadBehaviour(0, () =>
+        {
+            TileClass newtileclass = (parameters[0] as NodeType).GetTileClass();
+
+            if (newtileclass is MineInventory mineInventory)
+            {
+                mineInventory.totalFood = (parameters[1] as CaravanInventory).totalFood;
+                (parameters[1] as CaravanInventory).totalFood = 0;
+                Debug.Log("Deposit Food");
+            }
+        });
+
         behaviour.SetTransitionBehaviour(() =>
         {
-            foreach (MinerInventory currentMiner in (parameters[1] as List<MinerInventory>))
+            if ((parameters[1] as CaravanInventory).totalFood <= 0)
             {
-                currentMiner.totalFood = +1;
-                (parameters[0] as CaravanInventory).totalFood = -1;
+                OnFlag?.Invoke(Flags.OnInventoryEmpty);
+            }
+        });
 
-                if ((parameters[0] as CaravanInventory).totalFood <= 0)
-                {
-                    OnFlag?.Invoke(Flags.OnGoTownCenter);
-                }
+        return behaviour;
+    }
+
+    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+}
+
+public sealed class RepositFoodState : State
+{
+    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+
+    public override BehavioursActions GetTickbehaviour(params object[] parameters)
+    {
+        BehavioursActions behaviour = new BehavioursActions();
+
+        behaviour.AddMainThreadBehaviour(0, () => { (parameters[0] as CaravanInventory).totalFood = 15; });
+
+        behaviour.SetTransitionBehaviour(() =>
+        {
+            if ((parameters[0] as CaravanInventory).totalFood >= 0)
+            {
+                OnFlag?.Invoke(Flags.OnInventoryFull);
             }
         });
 

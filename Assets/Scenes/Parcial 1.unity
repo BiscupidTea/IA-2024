@@ -157,7 +157,9 @@ MonoBehaviour:
   cellGap: 1
   goldMineCuantity: 1
   minersCuantity: 1
+  caravansCuantity: 1
   minerPrefab: {fileID: 7477985091483319053, guid: a360e4a2a3878614d92d9d3e30d80d82, type: 3}
+  caravanPrefab: {fileID: 7477985091483319053, guid: 92408e987005ed74cbfb8f3586d900df, type: 3}
 --- !u!4 &14610554
 Transform:
   m_ObjectHideFlags: 0
