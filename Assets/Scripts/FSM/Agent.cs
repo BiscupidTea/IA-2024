@@ -14,7 +14,7 @@ public enum Behaviours
 public enum Flags
 {
     OnGoTownCenter,
-    OnGoMine,
+    OnStartMine,
 
     OnInventoryFull,
     OnInventoryEmpty,
@@ -32,6 +32,8 @@ public class Agent : MonoBehaviour
 
     protected Node<CoordinateType> CU;
     protected Node<CoordinateType> Mine;
+
+    protected Flags flagToRaise;
 
     public virtual void StartAgent(Grapf<Node<CoordinateType>, CoordinateType> grapfh, Node<CoordinateType> CU,
         Node<CoordinateType> Mine)

@@ -66,6 +66,7 @@ public sealed class MoveState<NodeType, CoordType> : State
     private NodeType target;
     private NodeType FirstNode;
     private NodeType CurrentNode;
+    private Flags flagToRaise;
 
     private Pathfinder<NodeType, CoordType> Pathfinder = new AStarPathfinder<NodeType, CoordType>();
     private Grapf<NodeType, CoordType> grapfh;
@@ -77,6 +78,7 @@ public sealed class MoveState<NodeType, CoordType> : State
         FirstNode = (NodeType)parameters[1];
         target = (NodeType)parameters[2];
         currentTargetPoint = 0;
+        flagToRaise = (Flags)parameters[3];
 
         CurrentNode = FirstNode;
         nodesPath = Pathfinder.FindPath(FirstNode, target, this.grapfh);
@@ -114,14 +116,7 @@ public sealed class MoveState<NodeType, CoordType> : State
         {
             if (currentTargetPoint >= nodesPath.Count)
             {
-                if (target.GetNodeType() == NodeTypeCost.TownCenter)
-                {
-                    OnFlag?.Invoke(Flags.OnGoTownCenter);
-                }
-                else
-                {
-                    OnFlag?.Invoke(Flags.OnGoMine);
-                }
+                OnFlag?.Invoke(flagToRaise);
             }
         });
 
@@ -192,7 +187,7 @@ public sealed class MiningState<NodeType, CoordType> : State
             {
                 goldForFood = 0;
                 totalFood -= 1;
-                //Debug.Log("Ñam");
+                Debug.Log("Ñam");
             }
         });
 
@@ -252,7 +247,9 @@ public sealed class DepositGoldState : State
     }
 }
 
-public sealed class StrikeState : State
+public sealed class StrikeState<NodeType, CoordType> : State
+    where NodeType : class, INode<CoordType>, new()
+    where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
     public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
     {
@@ -263,9 +260,29 @@ public sealed class StrikeState : State
     {
         BehavioursActions behaviour = new BehavioursActions();
 
+
+        behaviour.AddMainThreadBehaviour(0, () =>
+        {
+            TileClass newtileclass = (parameters[0] as NodeType).GetTileClass();
+
+            if (newtileclass is MineInventory mineInventory)
+            {
+                if (mineInventory.totalFood >= 1)
+                {
+                    mineInventory.totalFood -= 1;
+                    (parameters[1] as MinerInventory).totalFood += 1;
+                    Debug.Log("Pick food");
+                }
+            }
+            else
+            {
+                Debug.Log("no food in mine");
+            }
+        });
+
         behaviour.SetTransitionBehaviour(() =>
         {
-            if ((parameters[0] as MinerInventory).totalFood > 0)
+            if ((parameters[1] as MinerInventory).totalFood > 0)
             {
                 OnFlag?.Invoke(Flags.OnEndStrike);
             }

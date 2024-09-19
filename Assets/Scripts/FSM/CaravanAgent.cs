@@ -14,14 +14,14 @@ public class CaravanAgent : Agent
 
         Target = this.Mine;
         StartPoint = this.CU;
-
+        
         fsm = new FSM<Behaviours, Flags>();
 
         fsm.AddBehaviour<MoveState<Node<CoordinateType>, CoordinateType>>(Behaviours.Move,
             onEnterParameters: () => { return new object[] { grapfh, StartPoint, Target }; },
             onTickParameters: () => { return new object[] { speed, transform }; });
 
-        fsm.SetTransition(Behaviours.Move, Flags.OnGoMine, Behaviours.Mining, () => { Debug.Log("Mining"); });
+        fsm.SetTransition(Behaviours.Move, Flags.OnStartMine, Behaviours.Mining, () => { Debug.Log("Mining"); });
         fsm.SetTransition(Behaviours.Mining, Flags.OnInventoryFull, Behaviours.Move, () =>
         {
             Target = CU;
