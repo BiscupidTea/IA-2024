@@ -21,6 +21,7 @@ public interface INode
     public void SetNodeCost(int NodeCost);
     public void SetNodeType(NodeTypeCost NodeType);
     public NodeTypeCost GetNodeType();
+    public TileClass GetTileClass();
 }
 
 public interface INode<Coordinate> : INode where Coordinate : IEquatable<Coordinate>

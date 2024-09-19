@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3908520180655494348}
-  - component: {fileID: 3232905841106932489}
+  - component: {fileID: 5858682081575249114}
   m_Layer: 0
   m_Name: miner
   m_TagString: Untagged
@@ -116,7 +116,7 @@ Transform:
   - {fileID: 85695918318136289}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3232905841106932489
+--- !u!114 &5858682081575249114
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7477985091483319053}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba7503e8260da1a479353ca7a8cc6cff, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ab07d8a11478414e9ed4e394a192ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2

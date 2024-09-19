@@ -9,6 +9,7 @@ public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<
     private int nodeCost;
     private List<int> neightboursId = new List<int>();
     private NodeTypeCost nodeTypeCost;
+    private TileClass nodeTileClass;
 
     public void SetCoordinate(Coordinate newCoordinate)
     {
@@ -67,11 +68,26 @@ public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<
 
     public void SetNodeType(NodeTypeCost nodeType)
     {
+        if (nodeType == NodeTypeCost.GoldMine)
+        {
+            nodeTileClass = new MineInventory();
+        }
+        
         nodeTypeCost = nodeType;
     }
 
     public NodeTypeCost GetNodeType()
     {
         return nodeTypeCost;
+    }
+
+    public TileClass GetTileClass()
+    {
+        return nodeTileClass;
+    }
+
+    public void SetTileClass(TileClass tileClass)
+    {
+        this.nodeTileClass = tileClass;
     }
 }

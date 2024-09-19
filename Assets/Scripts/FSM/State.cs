@@ -64,7 +64,8 @@ public sealed class MoveState<NodeType, CoordType> : State
     private int currentTargetPoint;
     private List<NodeType> nodesPath;
     private NodeType target;
-    private NodeType currentNode;
+    private NodeType FirstNode;
+    private NodeType CurrentNode;
 
     private Pathfinder<NodeType, CoordType> Pathfinder = new AStarPathfinder<NodeType, CoordType>();
     private Grapf<NodeType, CoordType> grapfh;
@@ -73,11 +74,12 @@ public sealed class MoveState<NodeType, CoordType> : State
     {
         List<CoordType> a = new List<CoordType>();
         grapfh = parameters[0] as Grapf<NodeType, CoordType>;
-        currentNode = (NodeType)parameters[1];
+        FirstNode = (NodeType)parameters[1];
         target = (NodeType)parameters[2];
         currentTargetPoint = 0;
 
-        nodesPath = Pathfinder.FindPath(currentNode, target, this.grapfh);
+        CurrentNode = FirstNode;
+        nodesPath = Pathfinder.FindPath(FirstNode, target, this.grapfh);
 
         return default;
     }
@@ -95,6 +97,7 @@ public sealed class MoveState<NodeType, CoordType> : State
                     new Vector2(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
                         nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1])) < 0.1)
             {
+                CurrentNode = nodesPath[currentTargetPoint];
                 currentTargetPoint++;
             }
             else
@@ -113,11 +116,11 @@ public sealed class MoveState<NodeType, CoordType> : State
             {
                 if (target.GetNodeType() == NodeTypeCost.TownCenter)
                 {
-                    OnFlag?.Invoke(Flags.OnDepositGold);
+                    OnFlag?.Invoke(Flags.OnGoTownCenter);
                 }
                 else
                 {
-                    OnFlag?.Invoke(Flags.OnMining);
+                    OnFlag?.Invoke(Flags.OnGoMine);
                 }
             }
         });
@@ -131,7 +134,9 @@ public sealed class MoveState<NodeType, CoordType> : State
     }
 }
 
-public sealed class MiningState : State
+public sealed class MiningState<NodeType, CoordType> : State
+    where NodeType : class, INode<CoordType>, new()
+    where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
     private int totalGold;
     private int goldForFood;
@@ -167,10 +172,20 @@ public sealed class MiningState : State
 
             if (timer >= MineTime)
             {
-                totalGold += 1;
-                goldForFood += 1;
-                timer = 0;
-                //Debug.Log(totalGold);
+                TileClass newtileclass = (parameters[3] as NodeType).GetTileClass();
+
+                if (newtileclass is MineInventory mineInventory)
+                {
+                    mineInventory.totalGold -= 1;
+                    totalGold += 1;
+                    goldForFood += 1;
+                    timer = 0;
+                    Debug.Log(totalGold);
+                }
+                else
+                {
+                    Debug.Log("no gold mine");
+                }
             }
 
             if (goldForFood >= goldBeforeFood)
@@ -207,7 +222,7 @@ public sealed class MiningState : State
     }
 }
 
-public sealed class DepositState : State
+public sealed class DepositGoldState : State
 {
     public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
     {
@@ -253,6 +268,40 @@ public sealed class StrikeState : State
             if ((parameters[0] as MinerInventory).totalFood > 0)
             {
                 OnFlag?.Invoke(Flags.OnEndStrike);
+            }
+        });
+
+        return behaviour;
+    }
+
+    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+}
+
+public sealed class DepositFoodState : State
+{
+    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+
+    public override BehavioursActions GetTickbehaviour(params object[] parameters)
+    {
+        BehavioursActions behaviour = new BehavioursActions();
+
+        behaviour.SetTransitionBehaviour(() =>
+        {
+            foreach (MinerInventory currentMiner in (parameters[1] as List<MinerInventory>))
+            {
+                currentMiner.totalFood = +1;
+                (parameters[0] as CaravanInventory).totalFood = -1;
+
+                if ((parameters[0] as CaravanInventory).totalFood <= 0)
+                {
+                    OnFlag?.Invoke(Flags.OnGoTownCenter);
+                }
             }
         });
 

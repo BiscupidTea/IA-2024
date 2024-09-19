@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
     private Node<CoordinateType> townCenter;
     private Node<CoordinateType> mine;
 
-    private List<Agent> miners = new List<Agent>();
+    private List<MinerAgent> miners = new List<MinerAgent>();
 
     private void Start()
     {
@@ -81,12 +82,20 @@ public class GameManager : MonoBehaviour
                 new Vector3(townCenter.GetCoordinate().GetXY()[0], townCenter.GetCoordinate().GetXY()[1], 0),
                 Quaternion.identity, transform);
 
-            miners.Add(newMiner.GetComponent<Agent>());
+            miners.Add(newMiner.GetComponent<MinerAgent>());
         }
 
-        foreach (Agent currentMiner in miners)
+        foreach (MinerAgent currentMiner in miners)
         {
-            currentMiner.StartMiner(grapf, townCenter, mine);
+            currentMiner.StartAgent(grapf, townCenter, mine);
+        }
+    }
+
+    public void CallAlarm()
+    {
+        foreach (MinerAgent miner in miners)
+        {
+            miner.AlarmSound();
         }
     }
 }
