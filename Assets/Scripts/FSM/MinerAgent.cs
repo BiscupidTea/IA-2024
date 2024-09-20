@@ -9,6 +9,8 @@ public class MinerAgent : Agent
     public override void StartAgent(Grapf<Node<CoordinateType>, CoordinateType> grapfh, Node<CoordinateType> CU,
         Node<CoordinateType> Mine)
     {
+        base.StartAgent(grapfh, base.CU, base.Mine);
+        
         this.CU = CU;
         this.Mine = Mine;
 
@@ -17,9 +19,7 @@ public class MinerAgent : Agent
 
         flagToRaise = Flags.OnStartMine;
         this.grapfh = grapfh;
-
-        fsm = new FSM<Behaviours, Flags>();
-
+        
         fsm.AddBehaviour<MoveState<Node<CoordinateType>, CoordinateType>>(Behaviours.Move,
             onEnterParameters: () => { return new object[] { grapfh, StartPoint, Target, flagToRaise }; },
             onTickParameters: () => { return new object[] { speed, transform }; });
@@ -64,8 +64,6 @@ public class MinerAgent : Agent
         fsm.SetTransition(Behaviours.Mining, Flags.OnRequiresFood, Behaviours.Strike, () => { Debug.Log("Strike!"); });
         fsm.SetTransition(Behaviours.Strike, Flags.OnEndStrike, Behaviours.Mining, () => { Debug.Log("Mining"); });
         
-        fsm.SetTransition(Behaviours.Move, Flags.OnRefuge, Behaviours.Alarm, () => { Debug.Log("Refuged"); });
-
         fsm.ForcedState(Behaviours.Move);
     }
 

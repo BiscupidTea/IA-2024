@@ -8,6 +8,8 @@ public class CaravanAgent : Agent
     public override void StartAgent(Grapf<Node<CoordinateType>, CoordinateType> grapfh, Node<CoordinateType> CU,
         Node<CoordinateType> Mine)
     {
+        base.StartAgent(grapfh, base.CU, base.Mine);
+
         this.CU = CU;
         this.Mine = Mine;
 
@@ -16,8 +18,6 @@ public class CaravanAgent : Agent
 
         flagToRaise = Flags.OnInventoryFull;
         this.grapfh = grapfh;
-
-        fsm = new FSM<Behaviours, Flags>();
 
         fsm.AddBehaviour<MoveState<Node<CoordinateType>, CoordinateType>>(Behaviours.Move,
             onEnterParameters: () => { return new object[] { grapfh, StartPoint, Target, flagToRaise }; },
@@ -28,7 +28,7 @@ public class CaravanAgent : Agent
 
         fsm.AddBehaviour<RepositFoodState>(Behaviours.Refill,
             onTickParameters: () => { return new object[] { caravanInventory }; });
-
+        
         fsm.SetTransition(Behaviours.Move, Flags.OnInventoryFull, Behaviours.Deposit,
             () => { Debug.Log("Depositiong Food"); });
         fsm.SetTransition(Behaviours.Deposit, Flags.OnInventoryEmpty, Behaviours.Move, () =>
@@ -48,8 +48,30 @@ public class CaravanAgent : Agent
             StartPoint = CU;
             Debug.Log("Go to mine with " + caravanInventory.totalFood + " of food");
         });
-
+        
         fsm.ForcedState(Behaviours.Move);
+    }
+    
+    public override void AlarmSound()
+    {
+        if (fsm.currentState != (int)Behaviours.Alarm)
+        {
+            StartPoint = grapfh.SerchNearNode(transform.position.x, transform.position.y);
+            Target = CU;
+            
+            flagToRaise = Flags.OnRefuge;
+            
+            fsm.ForcedState(Behaviours.Move);
+        }
+        else
+        {
+            StartPoint = grapfh.SerchNearNode(transform.position.x, transform.position.y);
+            Target = Mine;
+            
+            flagToRaise = Flags.OnInventoryFull;
+            
+            fsm.ForcedState(Behaviours.Move);
+        }
     }
 
     private void Update()

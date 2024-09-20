@@ -40,6 +40,11 @@ public class Agent : MonoBehaviour
     public virtual void StartAgent(Grapf<Node<CoordinateType>, CoordinateType> grapfh, Node<CoordinateType> CU,
         Node<CoordinateType> Mine)
     {
+        fsm = new FSM<Behaviours, Flags>();
+
+        fsm.AddBehaviour<IdleState>(Behaviours.Alarm);
+        
+        fsm.SetTransition(Behaviours.Move, Flags.OnRefuge, Behaviours.Alarm, () => { Debug.Log("Refuged"); });
     }
 
     public virtual void AlarmSound()
