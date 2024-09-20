@@ -20,6 +20,8 @@ public enum Flags
 
     OnRequiresFood,
     OnEndStrike,
+    
+    OnRefuge,
 }
 
 public class Agent : MonoBehaviour
@@ -33,17 +35,15 @@ public class Agent : MonoBehaviour
     protected Node<CoordinateType> Mine;
 
     protected Flags flagToRaise;
+    protected Grapf<Node<CoordinateType>, CoordinateType> grapfh;
 
     public virtual void StartAgent(Grapf<Node<CoordinateType>, CoordinateType> grapfh, Node<CoordinateType> CU,
         Node<CoordinateType> Mine)
     {
     }
 
-    public void AlarmSound()
+    public virtual void AlarmSound()
     {
-        if (fsm.currentState != (int)Behaviours.Alarm)
-        {
-            fsm.ForcedState(Behaviours.Alarm);
-        }
+
     }
 }

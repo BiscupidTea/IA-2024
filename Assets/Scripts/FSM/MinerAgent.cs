@@ -16,6 +16,7 @@ public class MinerAgent : Agent
         StartPoint = this.CU;
 
         flagToRaise = Flags.OnStartMine;
+        this.grapfh = grapfh;
 
         fsm = new FSM<Behaviours, Flags>();
 
@@ -32,6 +33,8 @@ public class MinerAgent : Agent
 
         fsm.AddBehaviour<StrikeState<Node<CoordinateType>, CoordinateType>>(Behaviours.Strike,
             onTickParameters: () => { return new object[] { Target, minerInventory }; });
+        
+        fsm.AddBehaviour<IdleState>(Behaviours.Alarm);
 
         fsm.SetTransition(Behaviours.Move, Flags.OnStartMine, Behaviours.Mining, () =>
         {
@@ -60,8 +63,32 @@ public class MinerAgent : Agent
 
         fsm.SetTransition(Behaviours.Mining, Flags.OnRequiresFood, Behaviours.Strike, () => { Debug.Log("Strike!"); });
         fsm.SetTransition(Behaviours.Strike, Flags.OnEndStrike, Behaviours.Mining, () => { Debug.Log("Mining"); });
+        
+        fsm.SetTransition(Behaviours.Move, Flags.OnRefuge, Behaviours.Alarm, () => { Debug.Log("Refuged"); });
 
         fsm.ForcedState(Behaviours.Move);
+    }
+
+    public override void AlarmSound()
+    {
+        if (fsm.currentState != (int)Behaviours.Alarm)
+        {
+            StartPoint = grapfh.SerchNearNode(transform.position.x, transform.position.y);
+            Target = CU;
+            
+            flagToRaise = Flags.OnRefuge;
+            
+            fsm.ForcedState(Behaviours.Move);
+        }
+        else
+        {
+            StartPoint = grapfh.SerchNearNode(transform.position.x, transform.position.y);
+            Target = Mine;
+            
+            flagToRaise = Flags.OnStartMine;
+            
+            fsm.ForcedState(Behaviours.Move);
+        }
     }
 
     private void Update()

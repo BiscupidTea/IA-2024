@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     private List<MinerAgent> miners = new List<MinerAgent>();
     private List<CaravanAgent> caravans = new List<CaravanAgent>();
 
+    private bool Alarm;
+
     private void Start()
     {
         Pathfinder = new AStarPathfinder<Node<CoordinateType>, CoordinateType>();
@@ -119,6 +121,11 @@ public class GameManager : MonoBehaviour
         foreach (MinerAgent miner in miners)
         {
             miner.AlarmSound();
+        }
+
+        foreach (CaravanAgent caravan in caravans)
+        {
+            caravan.AlarmSound();
         }
     }
 }

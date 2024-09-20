@@ -129,6 +129,24 @@ public sealed class MoveState<NodeType, CoordType> : State
     }
 }
 
+public sealed class IdleState : State
+{
+    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+
+    public override BehavioursActions GetTickbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+
+    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+}
+
 //Miner
 
 public sealed class MiningState<NodeType, CoordType> : State

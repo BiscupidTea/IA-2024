@@ -15,6 +15,7 @@ public class CaravanAgent : Agent
         StartPoint = this.CU;
 
         flagToRaise = Flags.OnInventoryFull;
+        this.grapfh = grapfh;
 
         fsm = new FSM<Behaviours, Flags>();
 

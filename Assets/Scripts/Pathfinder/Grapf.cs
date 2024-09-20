@@ -87,6 +87,22 @@ public class Grapf<NodeType, CoordType> : IGraph<NodeType>
         return A.GetCoordinate().DistanceTo(B.GetCoordinate().GetXY());
     }
 
+    public NodeType SerchNearNode(float x, float y)
+    {
+        foreach (KeyValuePair<int,NodeType> serchNode in nodes)
+        {
+            if (serchNode.Value.GetCoordinate().GetXY()[0] == (int)x)
+            {
+                if (serchNode.Value.GetCoordinate().GetXY()[1] == (int)y)
+                {
+                    return serchNode.Value;
+                }
+            }
+        }
+
+        return nodes[0];
+    }
+
     public IEnumerator<NodeType> GetEnumerator()
     {
         return nodes.Values.GetEnumerator();
