@@ -6,7 +6,7 @@ public class BreadthPathfinder<NodeType, CoordType> : Pathfinder<NodeType, Coord
     where NodeType : INode<CoordType>
     where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
-    protected override float Distance(NodeType A, NodeType B,  IGraph<NodeType> graph)
+    protected override float Distance(NodeType A, NodeType B,  IGraph<NodeType> graph, Traveler traveler)
     {
         return 0;
     }
@@ -16,12 +16,12 @@ public class BreadthPathfinder<NodeType, CoordType> : Pathfinder<NodeType, Coord
         return graph.GetNeighborsNodes(node.GetId());
     }
 
-    protected override bool IsBloqued(NodeType node)
+    protected override bool IsBloqued(NodeType node, Traveler traveler)
     {
-        return node.GetBloqued();
+        return traveler.NodeTypesBloqued[node.GetNodeType()];
     }
 
-    protected override int MoveToNeighborCost(NodeType A, NodeType b)
+    protected override int MoveToNeighborCost(NodeType A, NodeType b, Traveler traveler)
     {
         return 0;
     }

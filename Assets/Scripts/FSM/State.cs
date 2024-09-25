@@ -67,6 +67,7 @@ public sealed class MoveState<NodeType, CoordType> : State
     private NodeType FirstNode;
     private NodeType CurrentNode;
     private Flags flagToRaise;
+    private Traveler traveler;
 
     private Pathfinder<NodeType, CoordType> Pathfinder = new AStarPathfinder<NodeType, CoordType>();
     private Grapf<NodeType, CoordType> grapfh;
@@ -79,9 +80,10 @@ public sealed class MoveState<NodeType, CoordType> : State
         target = (NodeType)parameters[2];
         currentTargetPoint = 0;
         flagToRaise = (Flags)parameters[3];
+        traveler = (Traveler)parameters[4];
 
         CurrentNode = FirstNode;
-        nodesPath = Pathfinder.FindPath(FirstNode, target, this.grapfh);
+        nodesPath = Pathfinder.FindPath(FirstNode, target, this.grapfh, traveler);
 
         return default;
     }

@@ -8,6 +8,7 @@ public class GrapfView : MonoBehaviour
     [SerializeField] private GameObject prefabTownCenter;
     [SerializeField] private GameObject prefabGoldMine;
     [SerializeField] private GameObject prefabPlain;
+    [SerializeField] private GameObject prefabPlateau;
     [SerializeField] private GameObject prefabMountain;
 
     public void SetGrapfView(Grapf<Node<CoordinateType>, CoordinateType> grapfh)
@@ -36,11 +37,12 @@ public class GrapfView : MonoBehaviour
                 case NodeTypeCost.Mountain:
                     prefab = prefabMountain;
                     break;
+                case NodeTypeCost.Plateau:
+                    prefab = prefabPlateau;
+                    break;
                 case NodeTypeCost.Plain:
                     prefab = prefabPlain;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             Instantiate(prefab, new Vector3(node.GetCoordinate().GetXY()[0], node.GetCoordinate().GetXY()[1], 1),
@@ -50,12 +52,12 @@ public class GrapfView : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!Application.isPlaying)
-            return;
         foreach (Node<CoordinateType> node in grapfh.nodes.Values)
         {
             if (node.GetBloqued())
                 Gizmos.color = Color.red;
+            else if (node.GetNodeCost() > 0)
+                Gizmos.color = Color.yellow;
             else
                 Gizmos.color = Color.green;
 

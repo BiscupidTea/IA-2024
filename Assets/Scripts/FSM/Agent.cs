@@ -37,6 +37,8 @@ public class Agent : MonoBehaviour
     protected Flags flagToRaise;
     protected Grapf<Node<CoordinateType>, CoordinateType> grapfh;
 
+    protected Traveler traveler;
+
     public virtual void StartAgent(Grapf<Node<CoordinateType>, CoordinateType> grapfh, Node<CoordinateType> CU,
         Node<CoordinateType> Mine)
     {

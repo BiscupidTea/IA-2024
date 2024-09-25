@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<Coordinate>
 {
     private int Id;
@@ -71,6 +70,20 @@ public class Node<Coordinate> : INode<Coordinate> where Coordinate : IEquatable<
         if (nodeType == NodeTypeCost.GoldMine)
         {
             nodeTileClass = new MineInventory();
+        }
+
+        switch (nodeType)
+        {
+            case NodeTypeCost.Mountain:
+                isBlocked = true;
+                nodeCost = 10;
+                break;
+            case NodeTypeCost.Plateau:
+                nodeCost = 5;
+                break;
+            case NodeTypeCost.Plain:
+                nodeCost = 0;
+                break;
         }
         
         nodeTypeCost = nodeType;

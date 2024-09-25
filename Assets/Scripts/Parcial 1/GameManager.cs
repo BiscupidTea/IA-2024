@@ -6,15 +6,15 @@ public class GameManager : MonoBehaviour
 {
     private Grapf<Node<CoordinateType>, CoordinateType> grapf;
 
-    [SerializeField] private Vector2Int grid;
     [SerializeField] private GrapfView grapfView;
     private Pathfinder<Node<CoordinateType>, CoordinateType> Pathfinder;
 
     [SerializeField] private int cellGap;
+    [SerializeField] private int totalMountains;
 
-    public int goldMineCuantity;
-    public int minersCuantity;
-    public int caravansCuantity;
+    private int goldMineCuantity;
+    private int minersCuantity;
+    private int caravansCuantity;
 
     [SerializeField] private GameObject minerPrefab;
     [SerializeField] private GameObject caravanPrefab;
@@ -26,8 +26,13 @@ public class GameManager : MonoBehaviour
 
     private bool Alarm;
 
-    private void Start()
+    public void StartGame(Vector2Int grid, int goldMineCuantity, int minersCuantity, int caravansCuantity)
     {
+        this.goldMineCuantity = goldMineCuantity;
+        this.minersCuantity = minersCuantity;
+        this.caravansCuantity = caravansCuantity;
+
+
         Pathfinder = new AStarPathfinder<Node<CoordinateType>, CoordinateType>();
 
         grapf = new Grapf<Node<CoordinateType>, CoordinateType>(grid.x, grid.y, cellGap, Algorithm.AStarPathfinder);
@@ -43,6 +48,12 @@ public class GameManager : MonoBehaviour
 
     private void SetNodesData(Grapf<Node<CoordinateType>, CoordinateType> grapfh)
     {
+        foreach (Node<CoordinateType> node in grapf.nodes.Values)
+        {
+            node.SetNodeType(NodeTypeCost.None);
+        }
+
+
         Node<CoordinateType> currentNode;
 
         //Set Town Center
@@ -57,7 +68,7 @@ public class GameManager : MonoBehaviour
         //Set Gold Mine
         for (int i = 0; i < goldMineCuantity; i++)
         {
-            currentNode = grapf.nodes[Random.Range(0, grapf.nodes.Count)];
+            currentNode = grapf.nodes[Random.Range(0, grapf.nodes.Count - 1)];
 
             if (currentNode.GetNodeType() == NodeTypeCost.None)
             {
@@ -67,6 +78,23 @@ public class GameManager : MonoBehaviour
         }
 
         //Set Mountains
+        for (int i = 0; i < totalMountains; i++)
+        {
+            currentNode = grapf.nodes[Random.Range(0, grapf.nodes.Count - 1)];
+
+            if (currentNode.GetNodeType() == NodeTypeCost.None)
+            {
+                currentNode.SetNodeType(NodeTypeCost.Mountain);
+
+                foreach (int nodeId in currentNode.GetNeighboursID())
+                {
+                    if (grapf.nodes[nodeId].GetNodeType() == NodeTypeCost.None)
+                    {
+                        grapf.nodes[nodeId].SetNodeType(NodeTypeCost.Plateau);
+                    }
+                }
+            }
+        }
 
         //Set Default Nodes Type
         foreach (Node<CoordinateType> node in grapfh)
@@ -96,7 +124,7 @@ public class GameManager : MonoBehaviour
             currentMiner.StartAgent(grapf, townCenter, mine);
         }
     }
-    
+
     private void SetCaravan(Grapf<Node<CoordinateType>, CoordinateType> grapfh)
     {
         GameObject newCaravan;

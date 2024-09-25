@@ -1,11 +1,19 @@
 using System;
 using System.Collections.Generic;
 
+public enum Algorithm
+{
+    DepthFirstPathfinder = 0,
+    BreadthPathfinder,
+    DijstraPathfinder,
+    AStarPathfinder,
+}
+
 public abstract class Pathfinder<NodeType, CoordType>
     where NodeType : INode<CoordType>
     where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
 {
-    public List<NodeType> FindPath(NodeType startNode, NodeType destinationNode, IGraph<NodeType> graph)
+    public List<NodeType> FindPath(NodeType startNode, NodeType destinationNode, IGraph<NodeType> graph, Traveler traveler)
     {
         Dictionary<NodeType, (NodeType Parent, int AcumulativeCost, float Heuristic)> nodes =
             new Dictionary<NodeType, (NodeType Parent, int AcumulativeCost, float Heuristic)>();
@@ -46,7 +54,7 @@ public abstract class Pathfinder<NodeType, CoordType>
             foreach (NodeType neighbor in GetNeighbors(currentNode, graph))
             {
                 if (!nodes.ContainsKey(neighbor) ||
-                IsBloqued(neighbor) ||
+                IsBloqued(neighbor, traveler) ||
                 closedList.Contains(neighbor))
                 {
                     continue;
@@ -54,11 +62,11 @@ public abstract class Pathfinder<NodeType, CoordType>
 
                 int tentativeNewAcumulatedCost = 0;
                 tentativeNewAcumulatedCost += nodes[currentNode].AcumulativeCost;
-                tentativeNewAcumulatedCost += MoveToNeighborCost(currentNode, neighbor);
+                tentativeNewAcumulatedCost += MoveToNeighborCost(currentNode, neighbor, traveler);
 
                 if (!openList.Contains(neighbor) || tentativeNewAcumulatedCost < nodes[currentNode].AcumulativeCost)
                 {
-                    nodes[neighbor] = (currentNode, tentativeNewAcumulatedCost, Distance(neighbor, destinationNode, graph));
+                    nodes[neighbor] = (currentNode, tentativeNewAcumulatedCost, Distance(neighbor, destinationNode, graph, traveler));
 
                     if (!openList.Contains(neighbor))
                     {
@@ -89,11 +97,11 @@ public abstract class Pathfinder<NodeType, CoordType>
 
     protected abstract ICollection<NodeType> GetNeighbors(NodeType node, IGraph<NodeType> graph);
 
-    protected abstract float Distance(NodeType A, NodeType B, IGraph<NodeType> graph);
+    protected abstract float Distance(NodeType A, NodeType B, IGraph<NodeType> graph, Traveler traveler);
 
     protected abstract bool NodesEquals(NodeType A, NodeType B);
 
-    protected abstract int MoveToNeighborCost(NodeType A, NodeType b);
+    protected abstract int MoveToNeighborCost(NodeType A, NodeType b, Traveler traveler);
 
-    protected abstract bool IsBloqued(NodeType node);
+    protected abstract bool IsBloqued(NodeType node, Traveler traveler);
 }
