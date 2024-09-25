@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class AStarPathfinder<NodeType, CoordType> : Pathfinder<NodeType, CoordType>
     where NodeType : INode<CoordType>

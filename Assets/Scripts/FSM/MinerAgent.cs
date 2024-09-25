@@ -29,8 +29,8 @@ public class MinerAgent : Agent
         traveler.NodeTypesAditionalCost.Add(NodeTypeCost.GoldMine, 0);
         traveler.NodeTypesAditionalCost.Add(NodeTypeCost.TownCenter, 0);
         traveler.NodeTypesAditionalCost.Add(NodeTypeCost.Mountain, 0);
-        traveler.NodeTypesAditionalCost.Add(NodeTypeCost.Plateau, 0);
-        traveler.NodeTypesAditionalCost.Add(NodeTypeCost.Plain, 0);
+        traveler.NodeTypesAditionalCost.Add(NodeTypeCost.Plateau, 45);
+        traveler.NodeTypesAditionalCost.Add(NodeTypeCost.Plain, 50);
         
         traveler.NodeTypesBloqued.Add(NodeTypeCost.GoldMine, false);
         traveler.NodeTypesBloqued.Add(NodeTypeCost.TownCenter, false);
