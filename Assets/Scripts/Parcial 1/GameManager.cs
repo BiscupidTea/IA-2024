@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -34,13 +32,14 @@ public class GameManager : MonoBehaviour
 
     private bool Alarm;
     private Vector2Int grid;
+
     private void Update()
     {
         for (int i = mines.Count - 1; i >= 0; i--)
         {
             Node<CoordinateType> node = mines[i];
             TileClass newTileClass = node.GetTileClass();
-    
+
             if (newTileClass is MineInventory mineInventory)
             {
                 if (mineInventory.totalGold <= 0)
@@ -205,7 +204,7 @@ public class GameManager : MonoBehaviour
     public void CallAlarm()
     {
         Alarm = !Alarm;
-        
+
         foreach (MinerAgent miner in miners)
         {
             miner.AlarmSound();
@@ -224,7 +223,7 @@ public class GameManager : MonoBehaviour
         {
             audioSource.clip = alarmOff;
         }
-        
+
         audioSource.Play();
     }
 

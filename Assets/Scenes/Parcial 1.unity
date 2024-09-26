@@ -530,7 +530,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 59.2
+  m_fontSize: 25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1093,7 +1093,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60.15
+  m_fontSize: 25.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3410,7 +3410,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 61.65
+  m_fontSize: 26
   m_fontSizeBase: 35.06
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3655,7 +3655,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 59.2
+  m_fontSize: 25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4561,11 +4561,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SeeCells: 0
+  SeeMap: 1
   prefabTownCenter: {fileID: 7978509183050391098, guid: 4c606f4e61f34104f920bab54b20b988, type: 3}
   prefabGoldMine: {fileID: 3422331827361489090, guid: 83b0057999da39647baae27c33faf3a5, type: 3}
   prefabPlain: {fileID: 8172274353743147553, guid: faaf4892e24e96f4695f958f0da4052d, type: 3}
   prefabPlateau: {fileID: 108228596832469596, guid: 0e232949aaa938d46861afa04752735a, type: 3}
   prefabMountain: {fileID: 108228596832469596, guid: 77ee1b0fd38be0449a3072cbcbe40a5f, type: 3}
+  baseMesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  MaterialTownCenter: {fileID: 2100000, guid: d43bcf767b977b848a2901c7ffe44e40, type: 2}
+  MaterialGoldMine: {fileID: 2100000, guid: 74c9791d323d7264abbbb06cf0804060, type: 2}
+  MaterialPlain: {fileID: 2100000, guid: e780de26c24cac349bcb73c095f670ce, type: 2}
+  MaterialPlateau: {fileID: 2100000, guid: 61430b57e783bdc4c90136cfbc84307b, type: 2}
+  MaterialMountain: {fileID: 2100000, guid: a71f15148cdc47847854375aff3e0303, type: 2}
 --- !u!4 &1929479616
 Transform:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ public class GrapfView : MonoBehaviour
     private Grapf<Node<CoordinateType>, CoordinateType> grapfh;
 
     [SerializeField] private bool SeeCells;
+    [SerializeField] private bool SeeMap;
 
     [SerializeField] private GameObject prefabTownCenter;
     [SerializeField] private GameObject prefabGoldMine;
@@ -13,42 +14,58 @@ public class GrapfView : MonoBehaviour
     [SerializeField] private GameObject prefabPlateau;
     [SerializeField] private GameObject prefabMountain;
 
+    [SerializeField] private Mesh baseMesh;
+    [SerializeField] private Material MaterialTownCenter;
+    [SerializeField] private Material MaterialGoldMine;
+    [SerializeField] private Material MaterialPlain;
+    [SerializeField] private Material MaterialPlateau;
+    [SerializeField] private Material MaterialMountain;
+
     public void SetGrapfView(Grapf<Node<CoordinateType>, CoordinateType> grapfh)
     {
         this.grapfh = grapfh;
 
-        SpawnVisibleGrid();
+        SeeMap = true;
     }
 
-    private void SpawnVisibleGrid()
+    private void LateUpdate()
     {
-        foreach (Node<CoordinateType> node in grapfh)
+        if (SeeMap)
         {
-            GameObject prefab = prefabPlain;
-
-            switch (node.GetNodeType())
+            Quaternion rotation = Quaternion.Euler(-90, 0, 0);
+            
+            foreach (Node<CoordinateType> node in grapfh)
             {
-                case NodeTypeCost.None:
-                    break;
-                case NodeTypeCost.GoldMine:
-                    prefab = prefabGoldMine;
-                    break;
-                case NodeTypeCost.TownCenter:
-                    prefab = prefabTownCenter;
-                    break;
-                case NodeTypeCost.Mountain:
-                    prefab = prefabMountain;
-                    break;
-                case NodeTypeCost.Plateau:
-                    prefab = prefabPlateau;
-                    break;
-                case NodeTypeCost.Plain:
-                    prefab = prefabPlain;
-                    break;
-            }
+                Matrix4x4 matrix =
+                    Matrix4x4.TRS(new Vector3(node.GetCoordinate().GetXY()[0], node.GetCoordinate().GetXY()[1], 1),
+                        rotation, new Vector3(0.1f, 0.1f, 0.1f));
 
-            Instantiate(prefab, new Vector3(node.GetCoordinate().GetXY()[0], node.GetCoordinate().GetXY()[1], 1),
-                Quaternion.identity, transform);
+                Mesh mesh = baseMesh;
+                Material material = MaterialPlain;
+
+                switch (node.GetNodeType())
+                {
+                    case NodeTypeCost.None:
+                        break;
+                    case NodeTypeCost.GoldMine:
+                        material = MaterialGoldMine;
+                        break;
+                    case NodeTypeCost.TownCenter:
+                        material = MaterialTownCenter;
+                        break;
+                    case NodeTypeCost.Mountain:
+                        material = MaterialMountain;
+                        break;
+                    case NodeTypeCost.Plateau:
+                        material = MaterialPlateau;
+                        break;
+                    case NodeTypeCost.Plain:
+                        material = MaterialPlain;
+                        break;
+                }
+
+                Graphics.DrawMesh(mesh, matrix, material, 0);
+            }
         }
     }
 
