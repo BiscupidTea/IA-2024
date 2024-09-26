@@ -11,7 +11,7 @@ public class MinerAgent : Agent
         Node<CoordinateType> Mine)
     {
         base.StartAgent(grapfh, base.CU, base.Mine);
-        
+
         this.CU = CU;
         this.Mine = Mine;
 
@@ -23,21 +23,21 @@ public class MinerAgent : Agent
 
         Dictionary<NodeTypeCost, int> NodeTypesAditionalCost;
         Dictionary<NodeTypeCost, bool> NodeTypesBloqued;
-        
+
         traveler = new Traveler();
-        
+
         traveler.NodeTypesAditionalCost.Add(NodeTypeCost.GoldMine, 0);
         traveler.NodeTypesAditionalCost.Add(NodeTypeCost.TownCenter, 0);
         traveler.NodeTypesAditionalCost.Add(NodeTypeCost.Mountain, 0);
         traveler.NodeTypesAditionalCost.Add(NodeTypeCost.Plateau, 45);
         traveler.NodeTypesAditionalCost.Add(NodeTypeCost.Plain, 50);
-        
+
         traveler.NodeTypesBloqued.Add(NodeTypeCost.GoldMine, false);
         traveler.NodeTypesBloqued.Add(NodeTypeCost.TownCenter, false);
         traveler.NodeTypesBloqued.Add(NodeTypeCost.Mountain, true);
         traveler.NodeTypesBloqued.Add(NodeTypeCost.Plateau, false);
         traveler.NodeTypesBloqued.Add(NodeTypeCost.Plain, false);
-        
+
         fsm.AddBehaviour<MoveState<Node<CoordinateType>, CoordinateType>>(Behaviours.Move,
             onEnterParameters: () => { return new object[] { grapfh, StartPoint, Target, flagToRaise, traveler }; },
             onTickParameters: () => { return new object[] { speed, transform }; });
@@ -51,7 +51,7 @@ public class MinerAgent : Agent
 
         fsm.AddBehaviour<StrikeState<Node<CoordinateType>, CoordinateType>>(Behaviours.Strike,
             onTickParameters: () => { return new object[] { Target, minerInventory }; });
-        
+
         fsm.AddBehaviour<IdleState>(Behaviours.Alarm);
 
         fsm.SetTransition(Behaviours.Move, Flags.OnStartMine, Behaviours.Mining, () =>
@@ -64,8 +64,8 @@ public class MinerAgent : Agent
             Target = CU;
             StartPoint = Mine;
             flagToRaise = Flags.OnGoTownCenter;
-           // Debug.Log("Go TownCenter, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
-           //           " of food");
+            // Debug.Log("Go TownCenter, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
+            //           " of food");
         });
 
         fsm.SetTransition(Behaviours.Move, Flags.OnGoTownCenter, Behaviours.Deposit,
@@ -75,13 +75,13 @@ public class MinerAgent : Agent
             Target = Mine;
             StartPoint = CU;
             flagToRaise = Flags.OnStartMine;
-           // Debug.Log("Go Mining, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
-            //          " of food");
+            Debug.Log("Go Mining, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
+                      " of food");
         });
 
         fsm.SetTransition(Behaviours.Mining, Flags.OnRequiresFood, Behaviours.Strike, () => { Debug.Log("Strike!"); });
         fsm.SetTransition(Behaviours.Strike, Flags.OnEndStrike, Behaviours.Mining, () => { Debug.Log("Mining"); });
-        
+
         fsm.ForcedState(Behaviours.Move);
     }
 
@@ -91,18 +91,18 @@ public class MinerAgent : Agent
         {
             StartPoint = grapfh.SerchNearNode(transform.position.x, transform.position.y);
             Target = CU;
-            
+
             flagToRaise = Flags.OnRefuge;
-            
+
             fsm.ForcedState(Behaviours.Move);
         }
         else
         {
             StartPoint = grapfh.SerchNearNode(transform.position.x, transform.position.y);
             Target = Mine;
-            
+
             flagToRaise = Flags.OnStartMine;
-            
+
             fsm.ForcedState(Behaviours.Move);
         }
     }

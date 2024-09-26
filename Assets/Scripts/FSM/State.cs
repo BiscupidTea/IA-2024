@@ -84,7 +84,7 @@ public sealed class MoveState<NodeType, CoordType> : State
 
         CurrentNode = FirstNode;
         nodesPath = Pathfinder.FindPath(FirstNode, target, this.grapfh, traveler);
-
+        
         return default;
     }
 
@@ -97,20 +97,28 @@ public sealed class MoveState<NodeType, CoordType> : State
 
         behaviour.AddMainThreadBehaviour(0, () =>
         {
-            if (Vector2.Distance(ownerTransform.position,
-                    new Vector2(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
-                        nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1])) < 0.1)
+            try
             {
-                CurrentNode = nodesPath[currentTargetPoint];
-                currentTargetPoint++;
+                if (Vector2.Distance(ownerTransform.position,
+                        new Vector2(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
+                            nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1])) < 0.1)
+                {
+                    CurrentNode = nodesPath[currentTargetPoint];
+                    currentTargetPoint++;
+                }
+                else
+                {
+                    ownerTransform.position +=
+                        (new Vector3(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
+                            nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1], 0) - ownerTransform.position)
+                        .normalized *
+                        speed * Time.deltaTime;
+                }
             }
-            else
+            catch (Exception e)
             {
-                ownerTransform.position +=
-                    (new Vector3(nodesPath[currentTargetPoint].GetCoordinate().GetXY()[0],
-                        nodesPath[currentTargetPoint].GetCoordinate().GetXY()[1], 0) - ownerTransform.position)
-                    .normalized *
-                    speed * Time.deltaTime;
+                Console.WriteLine(e);
+                throw;
             }
         });
 
