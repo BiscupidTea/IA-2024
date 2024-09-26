@@ -7,6 +7,7 @@ public enum Behaviours
     Strike,
     Deposit,
     Refill,
+    WaitCall,
     Alarm,
 }
 

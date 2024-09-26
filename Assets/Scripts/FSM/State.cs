@@ -88,7 +88,7 @@ public sealed class MoveState<NodeType, CoordType> : State
             CurrentNode = FirstNode;
             nodesPath = Pathfinder.FindPath(FirstNode, target, this.grapfh, traveler);
         });
-        
+
         return behaviour;
     }
 
@@ -185,6 +185,14 @@ public sealed class MiningState<NodeType, CoordType> : State
             goldForFood = 0;
             totalGold = (parameters[0] as MinerInventory).totalGold;
             totalFood = (parameters[0] as MinerInventory).totalFood;
+
+            TileClass newtileclass = (parameters[1] as NodeType).GetTileClass();
+
+            if (newtileclass is MineInventory mineInventory)
+            {
+                mineInventory.haveMiner = true;
+                Debug.Log(mineInventory.haveMiner);
+            }
         });
 
         return behaviour;
@@ -234,6 +242,7 @@ public sealed class MiningState<NodeType, CoordType> : State
             {
                 (parameters[2] as MinerInventory).totalGold = totalGold;
                 (parameters[2] as MinerInventory).totalFood = totalFood;
+
                 OnFlag?.Invoke(Flags.OnInventoryFull);
             }
 
@@ -250,7 +259,20 @@ public sealed class MiningState<NodeType, CoordType> : State
 
     public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
     {
-        return default;
+        BehavioursActions behaviour = new BehavioursActions();
+
+        behaviour.AddMultitreadableBehaviours(0, () =>
+        {
+            TileClass newtileclass = (parameters[0] as NodeType).GetTileClass();
+
+            if (newtileclass is MineInventory mineInventory)
+            {
+                mineInventory.haveMiner = false;
+                Debug.Log(mineInventory.haveMiner);
+            }
+        });
+
+        return behaviour;
     }
 }
 
@@ -390,6 +412,42 @@ public sealed class RepositFoodState : State
             if ((parameters[0] as CaravanInventory).totalFood >= 0)
             {
                 OnFlag?.Invoke(Flags.OnInventoryFull);
+            }
+        });
+
+        return behaviour;
+    }
+
+    public override BehavioursActions GetOnExitbehaviour(params object[] parameters)
+    {
+        return default;
+    }
+}
+
+public sealed class WaitToCallFoodState<NodeType, CoordType> : State
+    where NodeType : class, INode<CoordType>, new()
+    where CoordType : IEquatable<CoordType>, ICoordType<int>, new()
+{
+    public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
+    {
+        Debug.Log("Wait for call");
+        return default;
+    }
+
+    public override BehavioursActions GetTickbehaviour(params object[] parameters)
+    {
+        BehavioursActions behaviour = new BehavioursActions();
+
+        behaviour.SetTransitionBehaviour(() =>
+        {
+            TileClass newtileclass = (parameters[0] as NodeType).GetTileClass();
+
+            if (newtileclass is MineInventory mineInventory)
+            {
+                if (mineInventory.haveMiner)
+                {
+                    OnFlag?.Invoke(Flags.OnInventoryFull);
+                }
             }
         });
 

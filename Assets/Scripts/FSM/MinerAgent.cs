@@ -43,8 +43,9 @@ public class MinerAgent : Agent
             onTickParameters: () => { return new object[] { speed, transform }; });
 
         fsm.AddBehaviour<MiningState<Node<CoordinateType>, CoordinateType>>(Behaviours.Mining,
-            onEnterParameters: () => { return new object[] { minerInventory }; },
-            onTickParameters: () => { return new object[] { 0.5f, GoldPickedEat, minerInventory, Target }; });
+            onEnterParameters: () => { return new object[] { minerInventory, Target }; },
+            onTickParameters: () => { return new object[] { 0.5f, GoldPickedEat, minerInventory, Target }; },
+            onExitParameters: () => { return new object[] { Target }; });
 
         fsm.AddBehaviour<DepositGoldState>(Behaviours.Deposit,
             onTickParameters: () => { return new object[] { minerInventory }; });
