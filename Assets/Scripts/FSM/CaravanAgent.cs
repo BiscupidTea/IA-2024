@@ -90,9 +90,7 @@ public class CaravanAgent : Agent
             StartPoint = grapfh.SerchNearNode(transform.position.x, transform.position.y);
             Target = Mine;
 
-            flagToRaise = Flags.OnInventoryFull;
-
-            fsm.ForcedState(Behaviours.Move);
+            fsm.ForcedState(Behaviours.WaitCall);
         }
     }
 

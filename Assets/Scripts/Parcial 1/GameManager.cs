@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int cellGap;
     [SerializeField] private int totalMountains;
 
+    [SerializeField] private AudioClip alarmOn;
+    [SerializeField] private AudioClip alarmOff;
+    [SerializeField] private AudioSource audioSource;
+
     private int goldMineCuantity;
     private int minersCuantity;
     private int caravansCuantity;
@@ -200,6 +204,8 @@ public class GameManager : MonoBehaviour
 
     public void CallAlarm()
     {
+        Alarm = !Alarm;
+        
         foreach (MinerAgent miner in miners)
         {
             miner.AlarmSound();
@@ -209,6 +215,17 @@ public class GameManager : MonoBehaviour
         {
             caravan.AlarmSound();
         }
+
+        if (Alarm)
+        {
+            audioSource.clip = alarmOn;
+        }
+        else
+        {
+            audioSource.clip = alarmOff;
+        }
+        
+        audioSource.Play();
     }
 
     private void OnDrawGizmos()
