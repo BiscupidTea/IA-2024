@@ -167,9 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8f4d88a8105b249acd5f27acd22c2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfPoints: 10
-  areaMin: {x: -5, y: -5}
-  areaMax: {x: 5, y: 5}
+  totalPoints: 7
 --- !u!1 &1364235963
 GameObject:
   m_ObjectHideFlags: 0
