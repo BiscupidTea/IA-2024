@@ -74,18 +74,22 @@ public sealed class MoveState<NodeType, CoordType> : State
 
     public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
     {
-        List<CoordType> a = new List<CoordType>();
-        grapfh = parameters[0] as Grapf<NodeType, CoordType>;
-        FirstNode = (NodeType)parameters[1];
-        target = (NodeType)parameters[2];
-        currentTargetPoint = 0;
-        flagToRaise = (Flags)parameters[3];
-        traveler = (Traveler)parameters[4];
+        BehavioursActions behaviour = new BehavioursActions();
 
-        CurrentNode = FirstNode;
-        nodesPath = Pathfinder.FindPath(FirstNode, target, this.grapfh, traveler);
+        behaviour.AddMultitreadableBehaviours(0, () =>
+        {
+            List<CoordType> a = new List<CoordType>();
+            grapfh = parameters[0] as Grapf<NodeType, CoordType>;
+            FirstNode = (NodeType)parameters[1];
+            target = (NodeType)parameters[2];
+            currentTargetPoint = 0;
+            flagToRaise = (Flags)parameters[3];
+            traveler = (Traveler)parameters[4];
+            CurrentNode = FirstNode;
+            nodesPath = Pathfinder.FindPath(FirstNode, target, this.grapfh, traveler);
+        });
         
-        return default;
+        return behaviour;
     }
 
     public override BehavioursActions GetTickbehaviour(params object[] parameters)
@@ -168,6 +172,7 @@ public sealed class MiningState<NodeType, CoordType> : State
     private int totalFood;
 
     private float timer;
+    bool noGold = false;
 
     public override BehavioursActions GetOnEnterbehaviour(params object[] parameters)
     {
@@ -175,6 +180,7 @@ public sealed class MiningState<NodeType, CoordType> : State
 
         behaviour.AddMultitreadableBehaviours(0, () =>
         {
+            noGold = false;
             timer = 0;
             goldForFood = 0;
             totalGold = (parameters[0] as MinerInventory).totalGold;
@@ -201,15 +207,17 @@ public sealed class MiningState<NodeType, CoordType> : State
 
                 if (newtileclass is MineInventory mineInventory)
                 {
-                    mineInventory.totalGold -= 1;
-                    totalGold += 1;
-                    goldForFood += 1;
-                    timer = 0;
-                    // Debug.Log(totalGold);
-                }
-                else
-                {
-                    Debug.Log("no gold mine");
+                    if (mineInventory.totalGold <= 0)
+                    {
+                        noGold = true;
+                    }
+                    else
+                    {
+                        mineInventory.totalGold -= 1;
+                        totalGold += 1;
+                        goldForFood += 1;
+                        timer = 0;
+                    }
                 }
             }
 
@@ -217,13 +225,12 @@ public sealed class MiningState<NodeType, CoordType> : State
             {
                 goldForFood = 0;
                 totalFood -= 1;
-                // Debug.Log("Ñam");
             }
         });
 
         behaviour.SetTransitionBehaviour(() =>
         {
-            if (totalGold >= 15)
+            if (totalGold >= 15 || noGold)
             {
                 (parameters[2] as MinerInventory).totalGold = totalGold;
                 (parameters[2] as MinerInventory).totalFood = totalFood;
@@ -291,7 +298,7 @@ public sealed class StrikeState<NodeType, CoordType> : State
         BehavioursActions behaviour = new BehavioursActions();
 
 
-        behaviour.AddMainThreadBehaviour(0, () =>
+        behaviour.AddMultitreadableBehaviours(0, () =>
         {
             TileClass newtileclass = (parameters[0] as NodeType).GetTileClass();
 
@@ -301,12 +308,7 @@ public sealed class StrikeState<NodeType, CoordType> : State
                 {
                     mineInventory.totalFood -= 1;
                     (parameters[1] as MinerInventory).totalFood += 1;
-                    Debug.Log("Pick food");
                 }
-            }
-            else
-            {
-                Debug.Log("no food in mine");
             }
         });
 
@@ -342,7 +344,7 @@ public sealed class DepositFoodState<NodeType, CoordType> : State
     {
         BehavioursActions behaviour = new BehavioursActions();
 
-        behaviour.AddMainThreadBehaviour(0, () =>
+        behaviour.AddMultitreadableBehaviours(0, () =>
         {
             TileClass newtileclass = (parameters[0] as NodeType).GetTileClass();
 
@@ -350,7 +352,6 @@ public sealed class DepositFoodState<NodeType, CoordType> : State
             {
                 mineInventory.totalFood = (parameters[1] as CaravanInventory).totalFood;
                 (parameters[1] as CaravanInventory).totalFood = 0;
-                Debug.Log("Deposit Food");
             }
         });
 
@@ -382,7 +383,7 @@ public sealed class RepositFoodState : State
     {
         BehavioursActions behaviour = new BehavioursActions();
 
-        behaviour.AddMainThreadBehaviour(0, () => { (parameters[0] as CaravanInventory).totalFood = 15; });
+        behaviour.AddMultitreadableBehaviours(0, () => { (parameters[0] as CaravanInventory).totalFood = 15; });
 
         behaviour.SetTransitionBehaviour(() =>
         {

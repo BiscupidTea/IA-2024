@@ -48,10 +48,10 @@ public class Agent : MonoBehaviour
         
         fsm.SetTransition(Behaviours.Move, Flags.OnRefuge, Behaviours.Alarm, () => { Debug.Log("Refuged"); });
     }
-
-    public void SetNewMine(Node<CoordinateType> Mine)
+    
+    public void SetNewMine(Node<CoordinateType> newMine)
     {
-        this.Mine = Mine;
+        Mine = newMine;
     }
 
     public virtual void AlarmSound()

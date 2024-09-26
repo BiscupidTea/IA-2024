@@ -13,8 +13,12 @@ public class VoronoidController
 
     List<Side> aux = new List<Side>();
 
-    public void StartVornonoid(List<Vector2Int> list, Vector2Int grid)
+    public void StartVornonoid(List<Node<CoordinateType>> list, Vector2Int grid)
     {
+        mines.Clear();
+        vertex.Clear();
+        aux.Clear();
+        
         vertex.Add(new Vector3(grid.x, -grid.y, 0));
         vertex.Add(new Vector3(grid.x, 1, 0));
         vertex.Add(new Vector3(-1, 1, 0));
@@ -22,7 +26,9 @@ public class VoronoidController
 
         for (int i = 0; i < list.Count; i++)
         {
-            mines.Add(new MinesTemp(new Vector3(list[i].x, list[i].y, 1), new Poligon(vertex)));
+            mines.Add(new MinesTemp(
+                new Vector3(list[i].GetCoordinate().GetXY()[0], list[i].GetCoordinate().GetXY()[1], 1),
+                new Poligon(vertex)));
         }
 
         for (int i = 0; i < mines.Count; i++)
@@ -52,7 +58,7 @@ public class VoronoidController
 
         polygonCutter.CutPolygon(A, outCut);
     }
-    
+
     public Vector2? GetVoronoiCenter(Vector3 point)
     {
         PolygonCutter polygonCutter = new PolygonCutter();
@@ -91,8 +97,8 @@ public class VoronoidController
         for (int i = 0; i < mines.Count; i++)
         {
             Gizmos.color = mines[i].color;
-            Handles.color = mines[i].color;
-            Handles.DrawAAConvexPolygon(mines[i].poligon.vertices.ToArray());
+            //Handles.color = mines[i].color;
+            //Handles.DrawAAConvexPolygon(mines[i].poligon.vertices.ToArray());
         }
 
         Gizmos.color = UnityEngine.Color.black;
@@ -125,9 +131,9 @@ public class VoronoidController
             GUIStyle style = new GUIStyle();
             style.fontSize = 35;
             style.normal.textColor = Color.black;
-            Handles.Label(new Vector3(mines[i].position.x, mines[i].position.y + 0.5f, mines[i].position.z),
-                (i + 1).ToString(),
-                style);
+            //Handles.Label(new Vector3(mines[i].position.x, mines[i].position.y + 0.5f, mines[i].position.z),
+            //    (i + 1).ToString(),
+            //    style);
         }
     }
 }

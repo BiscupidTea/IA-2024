@@ -56,13 +56,13 @@ public class MinerAgent : Agent
 
         fsm.SetTransition(Behaviours.Move, Flags.OnStartMine, Behaviours.Mining, () =>
         {
-            Target = Mine;
+            Target = this.Mine;
             //Debug.Log("Mining");
         });
         fsm.SetTransition(Behaviours.Mining, Flags.OnInventoryFull, Behaviours.Move, () =>
         {
             Target = CU;
-            StartPoint = Mine;
+            StartPoint = this.Mine;
             flagToRaise = Flags.OnGoTownCenter;
             // Debug.Log("Go TownCenter, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
             //           " of food");
@@ -72,11 +72,10 @@ public class MinerAgent : Agent
             () => { Debug.Log("Depositing"); });
         fsm.SetTransition(Behaviours.Deposit, Flags.OnInventoryEmpty, Behaviours.Move, () =>
         {
-            Target = Mine;
+            Target = this.Mine;
             StartPoint = CU;
             flagToRaise = Flags.OnStartMine;
-            Debug.Log("Go Mining, with: " + minerInventory.totalGold + "$ - and: " + minerInventory.totalFood +
-                      " of food");
+            Debug.Log("Go Mining" + Target.GetCoordinate().GetXY()[0] + " , " + Target.GetCoordinate().GetXY()[1]);
         });
 
         fsm.SetTransition(Behaviours.Mining, Flags.OnRequiresFood, Behaviours.Strike, () => { Debug.Log("Strike!"); });

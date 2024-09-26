@@ -49,7 +49,7 @@ public class CaravanAgent : Agent
         {
             flagToRaise = Flags.OnInventoryEmpty;
             Target = CU;
-            StartPoint = Mine;
+            StartPoint = this.Mine;
             Debug.Log("Go to town center with " + caravanInventory.totalFood + " of food");
         });
 
@@ -58,7 +58,7 @@ public class CaravanAgent : Agent
         fsm.SetTransition(Behaviours.Refill, Flags.OnInventoryFull, Behaviours.Move, () =>
         {
             flagToRaise = Flags.OnInventoryFull;
-            Target = Mine;
+            Target = this.Mine;
             StartPoint = CU;
             Debug.Log("Go to mine with " + caravanInventory.totalFood + " of food");
         });
