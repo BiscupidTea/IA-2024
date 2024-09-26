@@ -4560,7 +4560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9505ac3f90de150418590939da61c3e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SeeCells: 0
+  SeeCells: 1
   SeeMap: 1
   prefabTownCenter: {fileID: 7978509183050391098, guid: 4c606f4e61f34104f920bab54b20b988, type: 3}
   prefabGoldMine: {fileID: 3422331827361489090, guid: 83b0057999da39647baae27c33faf3a5, type: 3}

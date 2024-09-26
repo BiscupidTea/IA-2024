@@ -18,7 +18,7 @@ public class VoronoidController
         mines.Clear();
         vertex.Clear();
         aux.Clear();
-        
+
         vertex.Add(new Vector3(grid.x, -grid.y, 0));
         vertex.Add(new Vector3(grid.x, 1, 0));
         vertex.Add(new Vector3(-1, 1, 0));
@@ -97,8 +97,8 @@ public class VoronoidController
         for (int i = 0; i < mines.Count; i++)
         {
             Gizmos.color = mines[i].color;
-            //Handles.color = mines[i].color;
-            //Handles.DrawAAConvexPolygon(mines[i].poligon.vertices.ToArray());
+            // Handles.color = mines[i].color;
+            // Handles.DrawAAConvexPolygon(mines[i].poligon.vertices.ToArray());
         }
 
         Gizmos.color = UnityEngine.Color.black;
