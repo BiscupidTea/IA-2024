@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour
 {
     private Grapf<Node<CoordinateType>, CoordinateType> grapf;
-    private VoronoidController voronoid = new VoronoidController();
+    private VoronoidController<CoordinateType> voronoid = new VoronoidController<CoordinateType>();
 
     [SerializeField] private GrapfView grapfView;
     private Pathfinder<Node<CoordinateType>, CoordinateType> Pathfinder;
@@ -45,7 +45,9 @@ public class GameManager : MonoBehaviour
                 if (mineInventory.totalGold <= 0)
                 {
                     mines.RemoveAt(i);
-                    voronoid.StartVornonoid(mines, grid);
+                    CoordinateType a = new CoordinateType();
+                    a.Init(grid.x, grid.y);
+                    voronoid.StartVornonoid(mines, a);
                     SetNewMine();
                 }
             }
@@ -66,8 +68,10 @@ public class GameManager : MonoBehaviour
 
         SetNodesData(grapf);
 
-        voronoid.StartVornonoid(mines, grid);
-        grapfView.SetGrapfView(grapf);
+        CoordinateType a = new CoordinateType();
+        a.Init(grid.x, grid.y);
+        voronoid.StartVornonoid(mines, a);
+        grapfView.SetGrapfView(grapf, voronoid);
 
         SetMainers(grapf);
         SetCaravan(grapf);
@@ -77,21 +81,25 @@ public class GameManager : MonoBehaviour
     {
         foreach (MinerAgent miner in miners)
         {
-            miner.SetNewMine(SerchNearMine(miner.transform.position));
+            CoordinateType coord = new CoordinateType();
+            coord.Init((int)miner.transform.position.x, (int)miner.transform.position.y);
+            miner.SetNewMine(SerchNearMine(coord));
         }
 
         foreach (CaravanAgent caravan in caravans)
         {
-            caravan.SetNewMine(SerchNearMine(caravan.transform.position));
+            CoordinateType coord = new CoordinateType();
+            coord.Init((int)caravan.transform.position.x, (int)caravan.transform.position.y);
+            caravan.SetNewMine(SerchNearMine(coord));
         }
     }
 
-    private Node<CoordinateType> SerchNearMine(Vector3 position)
+    private Node<CoordinateType> SerchNearMine(CoordinateType position)
     {
         Node<CoordinateType> newPosition = new Node<CoordinateType>();
         CoordinateType coord = new CoordinateType();
-        coord.Init((int)voronoid.GetVoronoiCenter(position).Value.x,
-            (int)voronoid.GetVoronoiCenter(position).Value.y);
+        coord.Init(voronoid.GetVoronoiCenter(position).GetXY()[0],
+            voronoid.GetVoronoiCenter(position).GetXY()[1]);
         newPosition.SetCoordinate(coord);
         Debug.Log("Near mine at: " + newPosition.GetCoordinate().GetXY()[0] + " , " +
                   newPosition.GetCoordinate().GetXY()[1]);
@@ -173,8 +181,9 @@ public class GameManager : MonoBehaviour
             miners.Add(newMiner.GetComponent<MinerAgent>());
         }
 
-        mine = SerchNearMine(new Vector3(townCenter.GetCoordinate().GetXY()[0], townCenter.GetCoordinate().GetXY()[1],
-            0));
+        CoordinateType a = new CoordinateType();
+        a.Init(townCenter.GetCoordinate().GetXY()[0], townCenter.GetCoordinate().GetXY()[1]);
+        mine = SerchNearMine(a);
 
         foreach (MinerAgent currentMiner in miners)
         {
@@ -225,10 +234,5 @@ public class GameManager : MonoBehaviour
         }
 
         audioSource.Play();
-    }
-
-    private void OnDrawGizmos()
-    {
-        voronoid.OnDrawGizmos();
     }
 }

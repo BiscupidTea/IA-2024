@@ -37,4 +37,34 @@ public class CoordinateType : ICoordType<int>, IEquatable<CoordinateType>
     {
         return coordinate.GetHashCode();
     }
+
+    public CoordinateType Subtract(CoordinateType coordinates)
+    {
+        int x = GetXY()[0] - coordinates.GetXY()[0];
+        int y = GetXY()[1] - coordinates.GetXY()[1];
+
+        CoordinateType result = new CoordinateType();
+        result.Init(x, y);
+        return result;
+    }
+    public CoordinateType Sum(CoordinateType coordinates)
+    {
+        int x = GetXY()[0] + coordinates.GetXY()[0];
+        int y = GetXY()[1] + coordinates.GetXY()[1];
+
+        CoordinateType result = new CoordinateType();
+        result.Init(x, y);
+        return result;
+    }
+
+    public CoordinateType Multiply(int coordinates)
+    {
+        int x = GetXY()[0] * coordinates;
+        int y = GetXY()[1] * coordinates;
+
+        CoordinateType result = new CoordinateType();
+        result.Init(x, y);
+        return result;
+    }
+
 }

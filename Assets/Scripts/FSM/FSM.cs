@@ -64,6 +64,7 @@ public class FSM<EnumState, EnumFlag>
 
     public void ForcedState(EnumState state)
     {
+        ExecuteBehaviour(GetCurrentStateOnExitBehaviours);
         currentState = Convert.ToInt32(state);
         ExecuteBehaviour(GetCurrentStateOnEnterBehaviours);
     }
