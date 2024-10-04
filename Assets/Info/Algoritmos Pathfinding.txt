@@ -17,3 +17,15 @@ Despues los balanceamos usado: https://es.wikipedia.org/wiki/M%C3%A9todo_de_Newt
 
 ------------------------------------------------------------------------------------------------------------------------
 
+Agente -> brain -> neurons[]
+                -> genome -> float[]
+
+Input layer = donde le das los input/comida a la ia
+Hidden Layer
+Output Layer = lo que me va a devolver 
+
+Bias = rueditas para la IA, en vez de tener un minimo de 0.5 para poder aprovar le das un plus con el Bias
+
+NO SE PUEDE CAMBIAR LAS NEURONAS O LOS LAYERS
+
+Sigmoide = hacer que el resultado tienda al extremo
