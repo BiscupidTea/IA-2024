@@ -2,11 +2,13 @@
 
 public class BirdAI : BirdBase
 {
-    protected override void OnThink(float dt, BirdBehaviour birdBehaviour, Obstacle obstacle)
+    protected override void OnThink(float dt, BirdBehaviour birdBehaviour, Obstacle obstacle, Coin coin)
     {
-        float[] inputs = new float[2];
-        inputs[0] = (obstacle.transform.position - birdBehaviour.transform.position).x / 10.0f;
-        inputs[1] = (obstacle.transform.position - birdBehaviour.transform.position).y / 10.0f;
+        float[] inputs = new float[4];
+        inputs[0] = (obstacle.transform.position - birdBehaviour.transform.position).x;
+        inputs[1] = (obstacle.transform.position - birdBehaviour.transform.position).y;
+        inputs[2] = (coin.transform.position - birdBehaviour.transform.position).x;
+        inputs[3] = (coin.transform.position - birdBehaviour.transform.position).y;
 
         float[] outputs;
         outputs = brain.Synapsis(inputs);
@@ -18,6 +20,11 @@ public class BirdAI : BirdBase
         if (Vector3.Distance(obstacle.transform.position, birdBehaviour.transform.position) <= 1.0f)
         {
             genome.fitness *= 2;
+        }
+        
+        if (Vector3.Distance(coin.transform.position, birdBehaviour.transform.position) <= 1.0f)
+        {
+            genome.fitness += 4;
         }
 
         genome.fitness += (100.0f - Vector3.Distance(obstacle.transform.position, birdBehaviour.transform.position));

@@ -42,11 +42,12 @@ public class BirdBase : MonoBehaviour
         if (state == State.Alive)
         {
             Obstacle obstacle = ObstacleManager.Instance.GetNextObstacle(this.transform.position);
+            Coin coin = CoinManager.Instance.GetNextCoin(this.transform.position);
 
             if (obstacle == null)
                 return;
 
-            OnThink(dt, birdBehaviour, obstacle);
+            OnThink(dt, birdBehaviour, obstacle, coin);
 
             birdBehaviour.UpdateBird(dt);
 
@@ -63,7 +64,7 @@ public class BirdBase : MonoBehaviour
 
     }
 
-    protected virtual void OnThink(float dt, BirdBehaviour birdBehaviour, Obstacle obstacle)
+    protected virtual void OnThink(float dt, BirdBehaviour birdBehaviour, Obstacle obstacle, Coin coin)
     {
 
     }

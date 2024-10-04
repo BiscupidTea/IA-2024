@@ -175,6 +175,7 @@ public class PopulationManager : MonoBehaviour
 
         BackgroundManager.Instance.Reset();
         ObstacleManager.Instance.Reset();
+        CoinManager.Instance.Reset();
         CameraFollow.Instance.Reset();
 
         DestroyAgents();
@@ -252,6 +253,7 @@ public class PopulationManager : MonoBehaviour
         {
             CameraFollow.Instance.UpdateCamera();
             ObstacleManager.Instance.CheckAndInstatiate();
+            CoinManager.Instance.CheckAndInstatiate();
 
             bool areAllDead = true;
 
