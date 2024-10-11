@@ -19,7 +19,7 @@ public class PopulationManager : MonoBehaviour
     public float MutationChance = 0.10f;
     public float MutationRate = 0.01f;
 
-    public int InputsCount = 4;
+    public int InputsCount = 5;
     public int HiddenLayers = 1;
     public int OutputsCount = 2;
     public int NeuronsCountPerHL = 7;
