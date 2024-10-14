@@ -3,6 +3,7 @@
 public class Tank : TankBase
 {
     float fitness = 0;
+    float lastDistanceToMine = 0;
 
     protected override void OnReset()
     {
@@ -21,35 +22,61 @@ public class Tank : TankBase
 
         float[] output = brain.Synapsis(inputs);
 
+        EvaluateFitness(output[0], output[1], dt);
+        
         SetForces(output[0], output[1], dt);
-
-        EvaluateFitness(output[0], output[1]);
     }
 
-    private void EvaluateFitness(float Right, float Left)
+ private void EvaluateFitness(float Right, float Left, float dt)
     {
-        if (Right == 0 && Left == 0)
-        {
-            fitness += 20 * mineFitness;
-            genome.fitness = fitness;
-        }
-    }
+        float currentDistanceToMine = GetDistanceToMine(nearMine);
 
-    protected override void OnTakeMine(GameObject mine)
-    {
-        if (isGoodMine == 1)
+        if (isGoodMine > 0)
         {
-            if (mineFitness < maxfitness)
+            if (currentDistanceToMine < lastDistanceToMine)
             {
-                mineFitness *= 1.1f;
+                fitness *= 1.1f;
+            }
+            else
+            {
+                fitness *= 0.9f;
             }
         }
         else
         {
-            if (mineFitness > minfitness)
+            if (currentDistanceToMine > lastDistanceToMine)
             {
-                mineFitness *= 0.9f;
+                fitness *= 1.1f;
+            }
+            else
+            {
+                fitness *= 0.9f;
             }
         }
+        
+        fitness = Mathf.Max(fitness, 0.1f);
+        genome.fitness = fitness;
+        lastDistanceToMine = currentDistanceToMine;
+    }
+
+    protected override void OnTakeMine(IMineTank mine)
+    {
+        if (mine.IsGoodMine())
+        {
+            fitness *= 1.1f; // Incremento de fitness en un 10% por recoger una mina buena.
+        }
+        else
+        {
+            fitness *= 0.9f; // Reducción de fitness en un 10% por recoger una mina mala.
+        }
+        
+        fitness = Mathf.Max(fitness, 0.1f);
+        genome.fitness = fitness;
+    }
+
+    private float GetDistanceToMine(IMineTank mine)
+    {
+        if (mine == null) return float.MaxValue;
+        return Vector3.Distance(transform.position, mine.GetPosition());
     }
 }

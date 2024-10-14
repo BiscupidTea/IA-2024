@@ -8,9 +8,9 @@ public class TankBase : MonoBehaviour
 
     protected Genome genome;
 	protected NeuralNetwork brain;
-    protected GameObject nearMine;
-    protected GameObject goodMine;
-    protected GameObject badMine;
+    protected IMineTank nearMine;
+    protected IMineTank goodMine;
+    protected IMineTank badMine;
     protected float[] inputs;
     protected float isGoodMine;
     
@@ -28,42 +28,34 @@ public class TankBase : MonoBehaviour
         OnReset();
     }
 
-    public void SetNearestMine(GameObject mine)
+    public void SetNearestMine(IMineTank mine)
     {
         nearMine = mine;
-        if (IsGoodMine(mine))
-        {
-            isGoodMine = 1;
-        }
-        else
-        {
-            isGoodMine = -1;
-        }
     }
 
-    public void SetGoodNearestMine(GameObject mine)
+    public void SetGoodNearestMine(IMineTank mine)
     {
         goodMine = mine;
     }
 
-    public void SetBadNearestMine(GameObject mine)
+    public void SetBadNearestMine(IMineTank mine)
     {
         badMine = mine;
     }
 
-    protected bool IsGoodMine(GameObject mine)
+    protected bool IsGoodMine(IMineTank mine)
     {
         return goodMine == mine;
     }
 
-    protected Vector3 GetDirToMine(GameObject mine)
+    protected Vector3 GetDirToMine(IMineTank mine)
     {
-        return (mine.transform.position - this.transform.position).normalized;
+        return (mine.GetPosition() - transform.position).normalized;
     }
     
-    protected bool IsCloseToMine(GameObject mine)
+    protected bool IsCloseToMine(IMineTank mine)
     {
-        return (this.transform.position - nearMine.transform.position).sqrMagnitude <= 2.0f;
+        return (this.transform.position - nearMine.GetPosition()).sqrMagnitude <= 2.0f;
     }
 
     protected void SetForces(float leftForce, float rightForce, float dt)
@@ -91,7 +83,7 @@ public class TankBase : MonoBehaviour
 
     }
 
-    protected virtual void OnTakeMine(GameObject mine)
+    protected virtual void OnTakeMine(IMineTank mine)
     {
     }
 
