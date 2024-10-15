@@ -67,11 +67,11 @@ public class StartConfigurationScreen : MonoBehaviour
         minesCountSlider.value = PopulationManager.Instance.MinesCount;
         generationDurationSlider.value = PopulationManager.Instance.GenerationDuration;
         eliteCountSlider.value = PopulationManager.Instance.EliteCount;
-        mutationChanceSlider.value = PopulationManager.Instance.MutationChance * 100.0f;
-        mutationRateSlider.value = PopulationManager.Instance.MutationRate * 100.0f;
+        mutationChanceSlider.value = PopulationManager.Instance.MutationChance;
+        mutationRateSlider.value = PopulationManager.Instance.MutationRate;
         hiddenLayersCountSlider.value = PopulationManager.Instance.HiddenLayers;
         neuronsPerHLSlider.value = PopulationManager.Instance.NeuronsCountPerHL;
-        biasSlider.value = -PopulationManager.Instance.Bias;
+        biasSlider.value = PopulationManager.Instance.Bias;
         sigmoidSlopeSlider.value = PopulationManager.Instance.P;
 
         startButton.onClick.AddListener(OnStartButtonClick);        
@@ -136,7 +136,7 @@ public class StartConfigurationScreen : MonoBehaviour
 
     void OnBiasChange(float value)
     {
-        PopulationManager.Instance.Bias = -value;
+        PopulationManager.Instance.Bias = value;
 
         biasTxt.text = string.Format(biasText, PopulationManager.Instance.Bias.ToString("0.00"));
     }

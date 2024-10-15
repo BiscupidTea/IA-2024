@@ -30,7 +30,7 @@ public class Tank : TankBase
  private void EvaluateFitness(float Right, float Left, float dt)
     {
         float currentDistanceToMine = GetDistanceToMine(nearMine);
-
+        
         if (isGoodMine > 0)
         {
             if (currentDistanceToMine < lastDistanceToMine)
