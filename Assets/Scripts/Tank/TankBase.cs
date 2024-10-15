@@ -14,10 +14,6 @@ public class TankBase : MonoBehaviour
     protected float[] inputs;
     protected float isGoodMine;
 
-    protected float mineFitness = 1;
-    protected float maxfitness = 2;
-    protected float minfitness = 0;
-
     protected float LastDistanceMine = 0;
 
     public void SetBrain(Genome genome, NeuralNetwork brain)

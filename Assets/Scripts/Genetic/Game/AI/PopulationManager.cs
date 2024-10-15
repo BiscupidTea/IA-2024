@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PopulationManager : MonoBehaviour
 {
-    public GameObject TankPrefab;
+    public GameObject TankPrefabA;
+    public GameObject TankPrefabB;
     public GameObject MinePrefab;
 
     public int PopulationCount = 40;
@@ -272,7 +274,7 @@ public class PopulationManager : MonoBehaviour
     Tank CreateTank(Genome genome, NeuralNetwork brain)
     {
         Vector3 position = GetRandomPos();
-        GameObject go = Instantiate<GameObject>(TankPrefab, position, GetRandomRot());
+        GameObject go = Instantiate<GameObject>(TankPrefabA, position, GetRandomRot());
         Tank t = go.GetComponent<Tank>();
         t.SetBrain(genome, brain);
         return t;

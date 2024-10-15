@@ -27,7 +27,7 @@ public class StartConfigurationScreen : MonoBehaviour
     public Slider sigmoidSlopeSlider;
     public Button startButton;
     public GameObject simulationScreen;
-    
+
     string populationText;
     string minesText;
     string generationDurationText;
@@ -40,7 +40,7 @@ public class StartConfigurationScreen : MonoBehaviour
     string neuronsPerHLCountText;
 
     void Start()
-    {   
+    {
         populationCountSlider.onValueChanged.AddListener(OnPopulationCountChange);
         minesCountSlider.onValueChanged.AddListener(OnMinesCountChange);
         generationDurationSlider.onValueChanged.AddListener(OnGenerationDurationChange);
@@ -67,26 +67,26 @@ public class StartConfigurationScreen : MonoBehaviour
         minesCountSlider.value = PopulationManager.Instance.MinesCount;
         generationDurationSlider.value = PopulationManager.Instance.GenerationDuration;
         eliteCountSlider.value = PopulationManager.Instance.EliteCount;
-        mutationChanceSlider.value = PopulationManager.Instance.MutationChance;
-        mutationRateSlider.value = PopulationManager.Instance.MutationRate;
+        mutationChanceSlider.value = PopulationManager.Instance.MutationChance * 100;
+        mutationRateSlider.value = PopulationManager.Instance.MutationRate * 100;
         hiddenLayersCountSlider.value = PopulationManager.Instance.HiddenLayers;
         neuronsPerHLSlider.value = PopulationManager.Instance.NeuronsCountPerHL;
         biasSlider.value = PopulationManager.Instance.Bias;
         sigmoidSlopeSlider.value = PopulationManager.Instance.P;
 
-        startButton.onClick.AddListener(OnStartButtonClick);        
+        startButton.onClick.AddListener(OnStartButtonClick);
     }
 
     void OnPopulationCountChange(float value)
     {
         PopulationManager.Instance.PopulationCount = (int)value;
-        
+
         populationCountTxt.text = string.Format(populationText, PopulationManager.Instance.PopulationCount);
     }
 
     void OnMinesCountChange(float value)
     {
-        PopulationManager.Instance.MinesCount = (int)value;        
+        PopulationManager.Instance.MinesCount = (int)value;
 
         minesCountTxt.text = string.Format(minesText, PopulationManager.Instance.MinesCount);
     }
@@ -94,8 +94,9 @@ public class StartConfigurationScreen : MonoBehaviour
     void OnGenerationDurationChange(float value)
     {
         PopulationManager.Instance.GenerationDuration = (int)value;
-        
-        generationDurationTxt.text = string.Format(generationDurationText, PopulationManager.Instance.GenerationDuration);
+
+        generationDurationTxt.text =
+            string.Format(generationDurationText, PopulationManager.Instance.GenerationDuration);
     }
 
     void OnEliteCountChange(float value)
@@ -109,7 +110,8 @@ public class StartConfigurationScreen : MonoBehaviour
     {
         PopulationManager.Instance.MutationChance = value / 100.0f;
 
-        mutationChanceTxt.text = string.Format(mutationChanceText, (int)(PopulationManager.Instance.MutationChance * 100));
+        mutationChanceTxt.text =
+            string.Format(mutationChanceText, (int)(PopulationManager.Instance.MutationChance * 100));
     }
 
     void OnMutationRateChange(float value)
@@ -122,7 +124,7 @@ public class StartConfigurationScreen : MonoBehaviour
     void OnHiddenLayersCountChange(float value)
     {
         PopulationManager.Instance.HiddenLayers = (int)value;
-        
+
 
         hiddenLayersCountTxt.text = string.Format(hiddenLayersCountText, PopulationManager.Instance.HiddenLayers);
     }
@@ -136,7 +138,7 @@ public class StartConfigurationScreen : MonoBehaviour
 
     void OnBiasChange(float value)
     {
-        PopulationManager.Instance.Bias = value;
+        PopulationManager.Instance.Bias = -value;
 
         biasTxt.text = string.Format(biasText, PopulationManager.Instance.Bias.ToString("0.00"));
     }
@@ -155,5 +157,4 @@ public class StartConfigurationScreen : MonoBehaviour
         this.gameObject.SetActive(false);
         simulationScreen.SetActive(true);
     }
-    
 }

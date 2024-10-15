@@ -1,9 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Tank : TankBase
 {
-    float fitness = 0;
+    float fitness = 1;
     float lastDistanceToMine = 0;
+
+    private float timeDistance = 5;
+    private float timerDistance = 0;
+
+    private float timeSerchingMine = 10;
+    private float timerSerchingMine = 0;
 
     protected override void OnReset()
     {
@@ -23,55 +30,67 @@ public class Tank : TankBase
         float[] output = brain.Synapsis(inputs);
 
         EvaluateFitness(output[0], output[1], dt);
-        
+
+        MathF.Max(fitness, 1);
+        genome.fitness = fitness;
+
         SetForces(output[0], output[1], dt);
     }
 
- private void EvaluateFitness(float Right, float Left, float dt)
+    private void EvaluateFitness(float Right, float Left, float dt)
     {
-        float currentDistanceToMine = GetDistanceToMine(nearMine);
-        
-        if (isGoodMine > 0)
+        timerDistance -= dt;
+        timerSerchingMine -= dt;
+
+        if (timeDistance <= 0)
         {
-            if (currentDistanceToMine < lastDistanceToMine)
+            float currentDistanceToMine = GetDistanceToMine(nearMine);
+
+            if (isGoodMine > 0)
             {
-                fitness *= 1.1f;
+                if (currentDistanceToMine < lastDistanceToMine)
+                {
+                    fitness += 0.1f;
+                }
+                else
+                {
+                    fitness += 0.01f;
+                }
             }
             else
             {
-                fitness *= 0.9f;
+                if (currentDistanceToMine > lastDistanceToMine)
+                {
+                    fitness += 0.1f;
+                }
+                else
+                {
+                    fitness += 0.01f;
+                }
             }
-        }
-        else
-        {
-            if (currentDistanceToMine > lastDistanceToMine)
+
+            if (timeSerchingMine > 0)
             {
-                fitness *= 1.1f;
+                fitness += timeSerchingMine;
             }
-            else
-            {
-                fitness *= 0.9f;
-            }
+
+            lastDistanceToMine = currentDistanceToMine;
+
+            timerDistance = timeDistance;
+            timerSerchingMine = timeSerchingMine;
         }
-        
-        fitness = Mathf.Max(fitness, 0.1f);
-        genome.fitness = fitness;
-        lastDistanceToMine = currentDistanceToMine;
     }
 
     protected override void OnTakeMine(IMineTank mine)
     {
         if (mine.IsGoodMine())
         {
-            fitness *= 1.1f; // Incremento de fitness en un 10% por recoger una mina buena.
+            fitness += 5; // Incremento de fitness en un 90% por recoger una mina buena.
         }
         else
         {
-            fitness *= 0.9f; // Reducción de fitness en un 10% por recoger una mina mala.
+            fitness -= 0.5f; // Reducción de fitness en un 90% por recoger una mina mala.
         }
-        
-        fitness = Mathf.Max(fitness, 0.1f);
-        genome.fitness = fitness;
     }
 
     private float GetDistanceToMine(IMineTank mine)
